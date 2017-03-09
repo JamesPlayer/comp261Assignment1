@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * A complete road
  * @author james
@@ -8,6 +10,8 @@ public class Road {
 	private int id;
 	
 	private String name;
+	
+	private List<Segment> segments;
 	
 	private boolean isOneWay;
 	
@@ -42,6 +46,20 @@ public class Road {
 	}
 
 	/**
+	 * @return the segments
+	 */
+	public List<Segment> getSegments() {
+		return segments;
+	}
+
+	/**
+	 * @param segments the segments to set
+	 */
+	public void setSegments(List<Segment> segments) {
+		this.segments = segments;
+	}
+
+	/**
 	 * @return the isOneWay
 	 */
 	public boolean isOneWay() {
@@ -72,14 +90,17 @@ public class Road {
 	/**
 	 * @param id
 	 * @param name
+	 * @param segments
 	 * @param isOneWay
 	 * @param speedLimit
 	 */
-	public Road(int id, String name, boolean isOneWay, int speedLimit) {
+	public Road(int id, String name, List<Segment> segments, boolean isOneWay, int speedLimit) {
 		this.id = id;
 		this.name = name;
+		this.segments = segments;
 		this.isOneWay = isOneWay;
 		this.speedLimit = speedLimit;
 	}
-	
+
+		
 }

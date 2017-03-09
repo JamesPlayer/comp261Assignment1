@@ -7,28 +7,30 @@ import java.util.List;
  */
 public class Segment {
 	
-	private int roadId;
+	private int id;
 	
 	private int length;
+
+	private Road road;
 	
-	private int nodeId1;
+	private Node startNode;
 	
-	private int nodeId2;
+	private Node endNode;
 	
 	private List<Location> coords;
 
 	/**
-	 * @return the roadId
+	 * @return the id
 	 */
-	public int getRoadId() {
-		return roadId;
+	public int getId() {
+		return id;
 	}
 
 	/**
-	 * @param roadId the roadId to set
+	 * @param id the id to set
 	 */
-	public void setRoadId(int roadId) {
-		this.roadId = roadId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	/**
@@ -46,31 +48,45 @@ public class Segment {
 	}
 
 	/**
-	 * @return the nodeId1
+	 * @return the road
 	 */
-	public int getNodeId1() {
-		return nodeId1;
+	public Road getRoad() {
+		return road;
 	}
 
 	/**
-	 * @param nodeId1 the nodeId1 to set
+	 * @param road the road to set
 	 */
-	public void setNodeId1(int nodeId1) {
-		this.nodeId1 = nodeId1;
+	public void setRoad(Road road) {
+		this.road = road;
 	}
 
 	/**
-	 * @return the nodeId2
+	 * @return the startNode
 	 */
-	public int getNodeId2() {
-		return nodeId2;
+	public Node getStartNode() {
+		return startNode;
 	}
 
 	/**
-	 * @param nodeId2 the nodeId2 to set
+	 * @param startNode the startNode to set
 	 */
-	public void setNodeId2(int nodeId2) {
-		this.nodeId2 = nodeId2;
+	public void setStartNode(Node startNode) {
+		this.startNode = startNode;
+	}
+
+	/**
+	 * @return the endNode
+	 */
+	public Node getEndNode() {
+		return endNode;
+	}
+
+	/**
+	 * @param endNode the endNode to set
+	 */
+	public void setEndNode(Node endNode) {
+		this.endNode = endNode;
 	}
 
 	/**
@@ -88,18 +104,22 @@ public class Segment {
 	}
 
 	/**
-	 * @param roadId
+	 * @param id
 	 * @param length
-	 * @param nodeId1
-	 * @param nodeId2
+	 * @param road
+	 * @param startNode
+	 * @param endNode
 	 * @param coords
 	 */
-	public Segment(int roadId, int length, int nodeId1, int nodeId2, List<Location> coords) {
-		this.roadId = roadId;
+	public Segment(int id, int length, Road road, Node startNode, Node endNode, List<Location> coords) {
+		this.id = id;
 		this.length = length;
-		this.nodeId1 = nodeId1;
-		this.nodeId2 = nodeId2;
+		this.road = road;
+		this.startNode = startNode;
+		this.endNode = endNode;
 		this.coords = coords;
 	}
+
+	
 
 }
