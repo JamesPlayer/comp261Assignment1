@@ -12,12 +12,15 @@ public class AucklandMap extends GUI {
 	private Location origin;
 	
 	private double scale;
+		
+	private Node highlightedNode;
 
 	/**
 	 * Constructor
 	 */
 	public AucklandMap() {
 		roadGraph = new RoadGraph();
+		highlightedNode = null;
 	}
 
 	@Override
@@ -32,11 +35,33 @@ public class AucklandMap extends GUI {
 		for (Node node : roadGraph.getNodes().values()) {
 			node.draw(g, origin, scale);
 		}
+		
+		if (highlightedNode != null) {
+			highlightedNode.highlight(g, origin, scale);
+		}
 	}
 
 	@Override
 	protected void onClick(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
+		// Turn the mouse click coords into a location
+		Location clickLocation = Location.newFromPoint(new Point(e.getX(), e.getY()), origin, scale);
+		
+		// Get the closest node
+		Node closestNode = null;
+		double closestDistance = -1.0;
+		
+		for (Node node : roadGraph.getNodes().values()) {
+			double nodeDistance = clickLocation.distance(node.getLocation());
+			if (closestDistance == -1.0 || nodeDistance < closestDistance) {
+				closestNode = node;
+				closestDistance = nodeDistance;
+			}
+		}
+		
+		if (closestNode == null) return;
+		getTextOutputArea().append(String.format("Intersection id: %d\n", closestNode.getId()));
+		highlightedNode = closestNode;
 
 	}
 

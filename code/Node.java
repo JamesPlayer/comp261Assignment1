@@ -13,6 +13,8 @@ public class Node {
 	private static final int SQUARE_SIZE = 6;
 	
 	private static final Color SQUARE_COLOR = Color.BLUE;
+	
+	private static final Color HIGHLIGHT_COLOR = Color.GREEN;
 
 	private int id;
 	
@@ -109,6 +111,12 @@ public class Node {
 
 	public void draw(Graphics g, Location origin, double scale) {
 		g.setColor(SQUARE_COLOR);
+		Point point = location.asPoint(origin, scale);
+		g.fillRect(point.x-3, point.y-3, SQUARE_SIZE, SQUARE_SIZE);
+	}
+	
+	public void highlight(Graphics g, Location origin, double scale) {
+		g.setColor(HIGHLIGHT_COLOR);
 		Point point = location.asPoint(origin, scale);
 		g.fillRect(point.x-3, point.y-3, SQUARE_SIZE, SQUARE_SIZE);
 	}
