@@ -110,6 +110,6 @@ public class Node {
 	public void draw(Graphics g, Location origin, double scale) {
 		g.setColor(SQUARE_COLOR);
 		Point point = location.asPoint(origin, scale);
-		g.fillRect(point.x, point.y, SQUARE_SIZE, SQUARE_SIZE);
+		g.fillRect(point.x-3, point.y-3, SQUARE_SIZE, SQUARE_SIZE);
 	}
 }

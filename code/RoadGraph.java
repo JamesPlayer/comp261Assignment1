@@ -135,6 +135,10 @@ public class RoadGraph {
 			
 			// Add segment to road
 			road.addSegment(segment);
+			
+			// Add segment to segments
+			segments.add(segment);
+			
 			count++;
 			
 			// If road is not one-way then add reverse directions for nodes
@@ -143,6 +147,7 @@ public class RoadGraph {
 				startNode.addInSeg(reverseSegment);
 				endNode.addOutSeg(reverseSegment);
 				road.addSegment(reverseSegment);
+				segments.add(reverseSegment);
 				count++;
 			}
 		}

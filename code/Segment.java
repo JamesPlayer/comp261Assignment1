@@ -1,3 +1,6 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.util.List;
 
 /**
@@ -6,6 +9,8 @@ import java.util.List;
  *
  */
 public class Segment {
+	
+	private static final Color ROAD_COLOR = Color.RED;
 	
 	private int id;
 	
@@ -118,6 +123,20 @@ public class Segment {
 		this.startNode = startNode;
 		this.endNode = endNode;
 		this.coords = coords;
+	}
+
+	public void draw(Graphics g, Location origin, double scale) {
+		g.setColor(ROAD_COLOR);
+		Location start, end;
+		Point startPoint, endPoint;
+		
+		for (int i=0; i<coords.size()-1; i++) {
+			start = coords.get(i);
+			end = coords.get(i+1);
+			startPoint = start.asPoint(origin, scale);
+			endPoint = end.asPoint(origin, scale);
+			g.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+		}
 	}
 
 	
