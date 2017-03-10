@@ -16,7 +16,7 @@ public class AucklandMap extends GUI {
 	 * Constructor
 	 */
 	public AucklandMap() {
-		scale = 100.0;
+		scale = 200.0;
 		roadGraph = new RoadGraph();
 	}
 
@@ -51,7 +51,13 @@ public class AucklandMap extends GUI {
 		try {
 			LoadGraphResult loadGraphResult = roadGraph.load(nodes, roads, segments);
 			getTextOutputArea().append(loadGraphResult.result + "\n");
+			
+			Location topLeft = Location.newFromLatLon(loadGraphResult.northernMostLat, loadGraphResult.westernMostLon);
+			Location bottomRight = Location.newFromLatLon(loadGraphResult.southernMostLat, loadGraphResult.easternMostLon);
+			double geoLength = topLeft.y - bottomRight.y;
+			
 			origin = Location.newFromLatLon(loadGraphResult.northernMostLat, loadGraphResult.westernMostLon);
+			scale = 400 / geoLength;
 			
 		} catch (FileNotFoundException e) {
 			getTextOutputArea().append("Could not find file :(\n");
