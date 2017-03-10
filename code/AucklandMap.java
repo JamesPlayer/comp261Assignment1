@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,7 +17,6 @@ public class AucklandMap extends GUI {
 	 * Constructor
 	 */
 	public AucklandMap() {
-		scale = 200.0;
 		roadGraph = new RoadGraph();
 	}
 
@@ -48,8 +48,31 @@ public class AucklandMap extends GUI {
 
 	@Override
 	protected void onMove(Move m) {
-		// TODO Auto-generated method stub
-
+		
+		Point oldPoint = origin.asPoint(origin, scale);
+		
+		// NORTH, SOUTH, EAST, WEST, ZOOM_IN, ZOOM_OUT
+		switch (m) {
+			case NORTH:
+				origin = Location.newFromPoint(new Point(oldPoint.x, oldPoint.y-20), origin, scale);
+				break;
+			case SOUTH:
+				origin = Location.newFromPoint(new Point(oldPoint.x, oldPoint.y+20), origin, scale);
+				break;
+			case EAST:
+				origin = Location.newFromPoint(new Point(oldPoint.x+20, oldPoint.y), origin, scale);
+				break;
+			case WEST:
+				origin = Location.newFromPoint(new Point(oldPoint.x-20, oldPoint.y), origin, scale);
+				break;
+			case ZOOM_IN:
+				scale = scale*1.2;
+				break;
+			case ZOOM_OUT:
+				scale = scale/1.2;
+				break;
+			default:
+		}
 	}
 
 	@Override
