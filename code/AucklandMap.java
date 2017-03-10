@@ -42,18 +42,18 @@ public class AucklandMap extends GUI {
 	@Override
 	protected void onLoad(File nodes, File roads, File segments, File polygons) {
 		try {
-			roadGraph.load(nodes, roads, segments);
+			String result = roadGraph.load(nodes, roads, segments);
+			getTextOutputArea().append(result + "\n");
 		} catch (FileNotFoundException e) {
-			getTextOutputArea().append("Could not find file :(");
+			getTextOutputArea().append("Could not find file :(\n");
 		} catch (IOException e) {
-			getTextOutputArea().append("Could not read file :(");
+			getTextOutputArea().append("Could not read file :(\n");
 		}
 
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		new AucklandMap();
 	}
 
 }

@@ -74,16 +74,36 @@ public class RoadGraph {
 		roads = new HashMap<Integer, Road>();
 	}
 
-	public void load(File nodesFile, File roadsFile, File segmentsFile) throws FileNotFoundException, IOException {
-		loadNodes(nodesFile);
-		loadRoads(roadsFile);
-		loadSegments(segmentsFile);
+	/**
+	 * Load in all nodes, roads and segments
+	 * @param nodesFile
+	 * @param roadsFile
+	 * @param segmentsFile
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public String load(File nodesFile, File roadsFile, File segmentsFile) throws FileNotFoundException, IOException {
+		int numRoadsAdded = loadRoads(roadsFile);
+		int numNodesAdded = loadNodes(nodesFile);
+		int numSegmentsAdded = loadSegments(segmentsFile);
+		return String.format("Added %d roads, %d intersections and %d road segments", numRoadsAdded, numNodesAdded, numSegmentsAdded);
 	}
 
-	private void loadSegments(File segmentsFile) throws NumberFormatException, IOException {
+	/**
+	 * Load road segments
+	 * @param segmentsFile
+	 * @return Integer
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
+	private int loadSegments(File segmentsFile) throws FileNotFoundException, IOException {
 		BufferedReader data = new BufferedReader(new FileReader(segmentsFile)); 
-		String line;
 		int id = 1;
+		int count = 0;
+		
+		// Skip first line
+		String line = data.readLine();
 		
 		while ((line = data.readLine()) != null) {
 			String[] values = line.split("\t");
@@ -114,28 +134,30 @@ public class RoadGraph {
 			
 			// Add segment to road
 			road.addSegment(segment);
+			count++;
 			
 			// If road is not one-way then add reverse directions for nodes
 			if (!road.isOneWay()) {
-				startNode.addInSeg(segment);
-				endNode.addOutSeg(segment);
+				Segment reverseSegment = new Segment(++id, length, road, endNode, startNode, coords);
+				startNode.addInSeg(reverseSegment);
+				endNode.addOutSeg(reverseSegment);
+				road.addSegment(reverseSegment);
+				count++;
 			}
 		}
-	}
-	
-	
-	private void addSegmentToRoad(Road road, Segment segment) {
-		
+		return count;
 	}
 	
 	/**
 	 * Load roads data from a file
 	 * @param roadsFile
+	 * @return Integer
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private void loadRoads(File roadsFile) throws FileNotFoundException, IOException {
-		BufferedReader data = new BufferedReader(new FileReader(roadsFile)); 
+	private int loadRoads(File roadsFile) throws FileNotFoundException, IOException {
+		BufferedReader data = new BufferedReader(new FileReader(roadsFile));
+		int count = 0;
 		
 		// Skip first line
 		String line = data.readLine();
@@ -152,18 +174,22 @@ public class RoadGraph {
 			
 			// Add to road map
 			roads.put(id, road);
-		}	
+			count++;
+		}
+		return count;
 	}
 
 	/**
 	 * Load nodes data from a file
 	 * @param nodesFile
+	 * @return Integer
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private void loadNodes(File nodesFile) throws FileNotFoundException, IOException {
+	private int loadNodes(File nodesFile) throws FileNotFoundException, IOException {
 		BufferedReader data = new BufferedReader(new FileReader(nodesFile)); 
 		String line;
+		int count = 0;
 		
 		while ((line = data.readLine()) != null) {
 			String[] values 	= line.split("\t");
@@ -176,8 +202,10 @@ public class RoadGraph {
 			Node node = new Node(id, location, new ArrayList<Segment>(), new ArrayList<Segment>());
 			
 			// Add to nodes map
-			nodes.put(id, node);
+			nodes.put(id, node);	
+			count++;
 		}
+		return count;
 	}
 	
 	
