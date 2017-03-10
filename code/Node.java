@@ -1,3 +1,6 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.util.List;
 
 /**
@@ -6,6 +9,10 @@ import java.util.List;
  *
  */
 public class Node {
+	
+	private static final int SQUARE_SIZE = 6;
+	
+	private static final Color SQUARE_COLOR = Color.BLUE;
 
 	private int id;
 	
@@ -98,5 +105,11 @@ public class Node {
 		this.location = location;
 		this.outSegs = outSegs;
 		this.inSegs = inSegs;
+	}
+
+	public void draw(Graphics g, Location origin, double scale) {
+		g.setColor(SQUARE_COLOR);
+		Point point = location.asPoint(origin, scale);
+		g.fillRect(point.x, point.y, SQUARE_SIZE, SQUARE_SIZE);
 	}
 }

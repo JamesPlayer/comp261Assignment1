@@ -7,17 +7,24 @@ import java.io.IOException;
 public class AucklandMap extends GUI {
 	
 	private RoadGraph roadGraph;
+	
+	private Location origin;
+	
+	private double scale;
 
 	/**
 	 * Constructor
 	 */
 	public AucklandMap() {
+		scale = 100.0;
 		roadGraph = new RoadGraph();
 	}
 
 	@Override
 	protected void redraw(Graphics g) {
-		// TODO Auto-generated method stub
+		for (Node node : roadGraph.getNodes().values()) {
+			node.draw(g, origin, scale);
+		}
 
 	}
 
@@ -42,8 +49,10 @@ public class AucklandMap extends GUI {
 	@Override
 	protected void onLoad(File nodes, File roads, File segments, File polygons) {
 		try {
-			String result = roadGraph.load(nodes, roads, segments);
-			getTextOutputArea().append(result + "\n");
+			LoadGraphResult loadGraphResult = roadGraph.load(nodes, roads, segments);
+			getTextOutputArea().append(loadGraphResult.result + "\n");
+			origin = Location.newFromLatLon(loadGraphResult.northernMostLat, loadGraphResult.westernMostLon);
+			
 		} catch (FileNotFoundException e) {
 			getTextOutputArea().append("Could not find file :(\n");
 		} catch (IOException e) {

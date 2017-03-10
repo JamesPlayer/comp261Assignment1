@@ -83,11 +83,12 @@ public class RoadGraph {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public String load(File nodesFile, File roadsFile, File segmentsFile) throws FileNotFoundException, IOException {
+	public LoadGraphResult load(File nodesFile, File roadsFile, File segmentsFile) throws FileNotFoundException, IOException {
 		int numRoadsAdded = loadRoads(roadsFile);
-		int numNodesAdded = loadNodes(nodesFile);
+		LoadNodesResult loadNodesResult = loadNodes(nodesFile);
 		int numSegmentsAdded = loadSegments(segmentsFile);
-		return String.format("Added %d roads, %d intersections and %d road segments", numRoadsAdded, numNodesAdded, numSegmentsAdded);
+		String result = String.format("Added %d roads, %d intersections and %d road segments", numRoadsAdded, loadNodesResult.count, numSegmentsAdded);
+		return new LoadGraphResult(loadNodesResult.northernMostLat, loadNodesResult.westernMostLon, loadNodesResult.southernMostLat, loadNodesResult.easternMostLon, loadNodesResult.count, numRoadsAdded, numSegmentsAdded, result);
 	}
 
 	/**
@@ -119,7 +120,7 @@ public class RoadGraph {
 			
 			// Add coords
 			for (int i=4; i<values.length; i=i+2) {
-				Location location = new Location(Double.parseDouble(values[i]), Double.parseDouble(values[i+1]));
+				Location location = Location.newFromLatLon(Double.parseDouble(values[i]), Double.parseDouble(values[i+1]));
 				coords.add(location);
 			}
 			
@@ -186,9 +187,15 @@ public class RoadGraph {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private int loadNodes(File nodesFile) throws FileNotFoundException, IOException {
+	private LoadNodesResult loadNodes(File nodesFile) throws FileNotFoundException, IOException {
 		BufferedReader data = new BufferedReader(new FileReader(nodesFile)); 
 		String line;
+		
+		// Initialize default extreme lats and lons to be middle of auckland
+		double northernMostLat = -36.847622;
+		double westernMostLon = 174.763444;
+		double southernMostLat = -36.847622;
+		double easternMostLon = 174.763444;
 		int count = 0;
 		
 		while ((line = data.readLine()) != null) {
@@ -196,15 +203,33 @@ public class RoadGraph {
 			int id 				= Integer.parseInt(values[0]);
 			double lat			= Double.parseDouble(values[1]);
 			double lon			= Double.parseDouble(values[2]);
-			Location location   = new Location(lat, lon);
+			Location location   = Location.newFromLatLon(lat, lon);
 			
 			// Create node
 			Node node = new Node(id, location, new ArrayList<Segment>(), new ArrayList<Segment>());
 			
 			// Add to nodes map
-			nodes.put(id, node);	
+			nodes.put(id, node);
+			
+			if (lat > northernMostLat) {
+				northernMostLat = lat;
+			}
+			
+			if (lon < westernMostLon) {
+				westernMostLon = lon;
+			}
+			
+			if (lat < southernMostLat) {
+				southernMostLat = lat;
+			}
+			
+			if (lon > easternMostLon) {
+				easternMostLon = lon;
+			}
+			
 			count++;
 		}
-		return count;
+		return new LoadNodesResult(northernMostLat, westernMostLon, southernMostLat, easternMostLon, count);
 	}
+	
 }
