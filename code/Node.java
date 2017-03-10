@@ -70,6 +70,22 @@ public class Node {
 	public void setInSegs(List<Segment> inSegs) {
 		this.inSegs = inSegs;
 	}
+	
+	/**
+	 * Add a segment to list of outgoing segments
+	 * @param segment
+	 */
+	public void addOutSeg(Segment segment) {
+		this.outSegs.add(segment);
+	}
+	
+	/**
+	 * Add a segment to list of incoming segments
+	 * @param segment
+	 */
+	public void addInSeg(Segment segment) {
+		this.inSegs.add(segment);
+	}
 
 	/**
 	 * @param id

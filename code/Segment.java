@@ -9,7 +9,7 @@ public class Segment {
 	
 	private int id;
 	
-	private int length;
+	private double length;
 
 	private Road road;
 	
@@ -36,14 +36,14 @@ public class Segment {
 	/**
 	 * @return the length
 	 */
-	public int getLength() {
+	public double getLength() {
 		return length;
 	}
 
 	/**
 	 * @param length the length to set
 	 */
-	public void setLength(int length) {
+	public void setLength(double length) {
 		this.length = length;
 	}
 
@@ -111,7 +111,7 @@ public class Segment {
 	 * @param endNode
 	 * @param coords
 	 */
-	public Segment(int id, int length, Road road, Node startNode, Node endNode, List<Location> coords) {
+	public Segment(int id, double length, Road road, Node startNode, Node endNode, List<Location> coords) {
 		this.id = id;
 		this.length = length;
 		this.road = road;

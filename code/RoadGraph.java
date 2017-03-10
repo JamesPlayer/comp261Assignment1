@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -79,8 +80,51 @@ public class RoadGraph {
 		loadSegments(segmentsFile);
 	}
 
-	private void loadSegments(File segmentsFile) {
-		// TODO Auto-generated method stub
+	private void loadSegments(File segmentsFile) throws NumberFormatException, IOException {
+		BufferedReader data = new BufferedReader(new FileReader(segmentsFile)); 
+		String line;
+		int id = 1;
+		
+		while ((line = data.readLine()) != null) {
+			String[] values = line.split("\t");
+			
+			// Since we don't have a segmentId from data, create one by incrementing an int
+			id++;
+			
+			double length				= Double.parseDouble(values[1]);
+			Road road					= roads.get(Integer.parseInt(values[0]));
+			Node startNode				= nodes.get(Integer.parseInt(values[2]));
+			Node endNode				= nodes.get(Integer.parseInt(values[3]));
+			List<Location> coords		= new ArrayList<Location>();
+			
+			// Add coords
+			for (int i=4; i<values.length; i=i+2) {
+				Location location = new Location(Double.parseDouble(values[i]), Double.parseDouble(values[i+1]));
+				coords.add(location);
+			}
+			
+			// Create segment
+			Segment segment = new Segment(id, length, road, startNode, endNode, coords);
+			
+			// Add outgoing segment to start node
+			startNode.addOutSeg(segment);
+			
+			// Add incoming segment to end node
+			endNode.addInSeg(segment);
+			
+			// Add segment to road
+			road.addSegment(segment);
+			
+			// If road is not one-way then add reverse directions for nodes
+			if (!road.isOneWay()) {
+				startNode.addInSeg(segment);
+				endNode.addOutSeg(segment);
+			}
+		}
+	}
+	
+	
+	private void addSegmentToRoad(Road road, Segment segment) {
 		
 	}
 	

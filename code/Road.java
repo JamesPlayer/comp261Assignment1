@@ -86,6 +86,14 @@ public class Road {
 	public void setSpeedLimit(int speedLimit) {
 		this.speedLimit = speedLimit;
 	}
+	
+	/**
+	 * Add segment to list of segments for this road
+	 * @param segment
+	 */
+	public void addSegment(Segment segment) {
+		segments.add(segment);
+	}
 
 	/**
 	 * @param id
