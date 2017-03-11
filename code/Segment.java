@@ -12,6 +12,8 @@ public class Segment {
 	
 	private static final Color ROAD_COLOR = Color.RED;
 	
+	private static final Color HIGHLIGHT_COLOR = Color.GREEN;
+	
 	private int id;
 	
 	private double length;
@@ -124,9 +126,13 @@ public class Segment {
 		this.endNode = endNode;
 		this.coords = coords;
 	}
-
+	
 	public void draw(Graphics g, Location origin, double scale) {
-		g.setColor(ROAD_COLOR);
+		draw(g, origin, scale, ROAD_COLOR);
+	}
+
+	public void draw(Graphics g, Location origin, double scale, Color color) {
+		g.setColor(color);
 		Location start, end;
 		Point startPoint, endPoint;
 		
@@ -139,6 +145,7 @@ public class Segment {
 		}
 	}
 
-	
-
+	public void highlight(Graphics g, Location origin, double scale) {
+		draw(g, origin, scale, HIGHLIGHT_COLOR);	
+	}
 }

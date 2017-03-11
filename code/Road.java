@@ -1,4 +1,4 @@
-import java.util.List;
+import java.util.Set;
 
 /**
  * A complete road
@@ -11,7 +11,7 @@ public class Road {
 	
 	private String name;
 	
-	private List<Segment> segments;
+	private Set<Segment> segments;
 	
 	private boolean isOneWay;
 	
@@ -48,14 +48,14 @@ public class Road {
 	/**
 	 * @return the segments
 	 */
-	public List<Segment> getSegments() {
+	public Set<Segment> getSegments() {
 		return segments;
 	}
 
 	/**
 	 * @param segments the segments to set
 	 */
-	public void setSegments(List<Segment> segments) {
+	public void setSegments(Set<Segment> segments) {
 		this.segments = segments;
 	}
 
@@ -102,7 +102,7 @@ public class Road {
 	 * @param isOneWay
 	 * @param speedLimit
 	 */
-	public Road(int id, String name, List<Segment> segments, boolean isOneWay, int speedLimit) {
+	public Road(int id, String name, Set<Segment> segments, boolean isOneWay, int speedLimit) {
 		this.id = id;
 		this.name = name;
 		this.segments = segments;

@@ -176,7 +176,7 @@ public class RoadGraph {
 			int speedLimit 		= Integer.parseInt(values[5]);
 			
 			// Create road
-			Road road = new Road(id, name, new ArrayList<Segment>(), isOneWay, speedLimit);
+			Road road = new Road(id, name, new HashSet<Segment>(), isOneWay, speedLimit);
 			
 			// Add to road map
 			roads.put(id, road);
@@ -211,7 +211,7 @@ public class RoadGraph {
 			Location location   = Location.newFromLatLon(lat, lon);
 			
 			// Create node
-			Node node = new Node(id, location, new ArrayList<Segment>(), new ArrayList<Segment>());
+			Node node = new Node(id, location, new HashSet<Segment>(), new HashSet<Segment>());
 			
 			// Add to nodes map
 			nodes.put(id, node);

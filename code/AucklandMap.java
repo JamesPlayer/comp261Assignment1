@@ -4,6 +4,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AucklandMap extends GUI {
 	
@@ -14,6 +16,8 @@ public class AucklandMap extends GUI {
 	private double scale;
 		
 	private Node highlightedNode;
+	
+	private Set<Segment> highlightedSegments;
 
 	/**
 	 * Constructor
@@ -21,6 +25,7 @@ public class AucklandMap extends GUI {
 	public AucklandMap() {
 		roadGraph = new RoadGraph();
 		highlightedNode = null;
+		highlightedSegments = new HashSet<Segment>();
 	}
 
 	@Override
@@ -38,6 +43,10 @@ public class AucklandMap extends GUI {
 		
 		if (highlightedNode != null) {
 			highlightedNode.highlight(g, origin, scale);
+		}
+		
+		for (Segment segment : highlightedSegments) {
+			segment.highlight(g, origin, scale);
 		}
 	}
 
@@ -60,15 +69,54 @@ public class AucklandMap extends GUI {
 		}
 		
 		if (closestNode == null) return;
+		
+		// Show some info about the intersection
 		getTextOutputArea().append(String.format("Intersection id: %d\n", closestNode.getId()));
+		
+		// Highlight it on the page
 		highlightedNode = closestNode;
-
+		
+		// Find the roads at the intersection and display the info
+		Set<Segment> segments = new HashSet<Segment>(closestNode.getInSegs());
+		segments.addAll(closestNode.getOutSegs());
+		Set<String> roads = new HashSet<String>();
+		
+		for (Segment segment : segments) {
+			roads.add(segment.getRoad().getName());
+		}
+		
+		getTextOutputArea().append(String.format("Roads from this intersection: %s\n", roads.toString()));
 	}
 
 	@Override
 	protected void onSearch() {
-		// TODO Auto-generated method stub
-
+		
+		// Remove any existing highlighted segments
+		highlightedSegments.clear();
+		
+		String roadName = getSearchBox().getText();
+		Set<Road> foundRoads = new HashSet<Road>();
+		
+		// Find road with this exact name
+		for (Road road : roadGraph.getRoads().values()) {
+			if (road.getName().equals(roadName)) {
+				foundRoads.add(road);
+			}
+		}
+		
+		// Handle no road found
+		if (foundRoads.isEmpty()) {
+			getTextOutputArea().append("No roads matched your search\n");
+			return;
+		}
+		
+		// Add all segments from roads that were found
+		int count = 0;
+		for (Road road : foundRoads) {			
+			highlightedSegments.addAll(road.getSegments());
+			count++;
+		}
+		getTextOutputArea().append(String.format("Highlighted %d road(s) matching your search\n", count));
 	}
 
 	@Override

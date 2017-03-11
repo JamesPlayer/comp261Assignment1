@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.List;
+import java.util.Set;
 
 /**
  * An intersection between two or more road segments
@@ -20,9 +20,9 @@ public class Node {
 	
 	private Location location;
 	
-	private List<Segment> outSegs;
+	private Set<Segment> outSegs;
 	
-	private List<Segment> inSegs;
+	private Set<Segment> inSegs;
 
 	/**
 	 * @return the id
@@ -55,28 +55,28 @@ public class Node {
 	/**
 	 * @return the outSegs
 	 */
-	public List<Segment> getOutSegs() {
+	public Set<Segment> getOutSegs() {
 		return outSegs;
 	}
 
 	/**
 	 * @param outSegs the outSegs to set
 	 */
-	public void setOutSegs(List<Segment> outSegs) {
+	public void setOutSegs(Set<Segment> outSegs) {
 		this.outSegs = outSegs;
 	}
 
 	/**
 	 * @return the inSegs
 	 */
-	public List<Segment> getInSegs() {
+	public Set<Segment> getInSegs() {
 		return inSegs;
 	}
 
 	/**
 	 * @param inSegs the inSegs to set
 	 */
-	public void setInSegs(List<Segment> inSegs) {
+	public void setInSegs(Set<Segment> inSegs) {
 		this.inSegs = inSegs;
 	}
 	
@@ -102,7 +102,7 @@ public class Node {
 	 * @param outSegs
 	 * @param inSegs
 	 */
-	public Node(int id, Location location, List<Segment> outSegs, List<Segment> inSegs) {
+	public Node(int id, Location location, Set<Segment> outSegs, Set<Segment> inSegs) {
 		this.id = id;
 		this.location = location;
 		this.outSegs = outSegs;
@@ -110,14 +110,16 @@ public class Node {
 	}
 
 	public void draw(Graphics g, Location origin, double scale) {
-		g.setColor(SQUARE_COLOR);
+		draw(g, origin, scale, SQUARE_COLOR);
+	}
+	
+	public void draw(Graphics g, Location origin, double scale, Color color) {
+		g.setColor(color);
 		Point point = location.asPoint(origin, scale);
 		g.fillRect(point.x-3, point.y-3, SQUARE_SIZE, SQUARE_SIZE);
 	}
 	
 	public void highlight(Graphics g, Location origin, double scale) {
-		g.setColor(HIGHLIGHT_COLOR);
-		Point point = location.asPoint(origin, scale);
-		g.fillRect(point.x-3, point.y-3, SQUARE_SIZE, SQUARE_SIZE);
+		draw(g, origin, scale, HIGHLIGHT_COLOR);
 	}
 }
