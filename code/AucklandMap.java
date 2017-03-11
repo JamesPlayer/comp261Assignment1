@@ -49,10 +49,12 @@ public class AucklandMap extends GUI {
 			node.draw(g, origin, scale);
 		}
 		
+		// Draw highlighted intersection
 		if (highlightedNode != null) {
 			highlightedNode.highlight(g, origin, scale);
 		}
 		
+		// Draw highlighted segments
 		for (Segment segment : highlightedSegments) {
 			segment.highlight(g, origin, scale);
 		}
@@ -196,11 +198,11 @@ public class AucklandMap extends GUI {
 			// Get topLeft and bottomRight points to get initial origin and scale
 			Location topLeft = Location.newFromLatLon(loadGraphResult.northernMostLat, loadGraphResult.westernMostLon);
 			Location bottomRight = Location.newFromLatLon(loadGraphResult.southernMostLat, loadGraphResult.easternMostLon);
-			double geoLength = topLeft.y - bottomRight.y;
+			double geoWidth = bottomRight.x - topLeft.x;
 			
 			// Set initial origin and scale
 			origin = Location.newFromLatLon(loadGraphResult.northernMostLat, loadGraphResult.westernMostLon);
-			scale = getDrawingAreaDimension().getWidth() / geoLength;
+			scale = getDrawingAreaDimension().getWidth() / geoWidth;
 			
 		} catch (FileNotFoundException e) {
 			getTextOutputArea().append("Could not find file :(\n");
