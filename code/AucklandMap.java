@@ -4,10 +4,17 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class AucklandMap extends GUI {
+	
+	private static final double ZOOM_FACTOR = 0.2;
+	
+	private static final int MOVE_FACTOR = 20; // In pixels
 	
 	private RoadGraph roadGraph;
 	
@@ -18,6 +25,7 @@ public class AucklandMap extends GUI {
 	private Node highlightedNode;
 	
 	private Set<Segment> highlightedSegments;
+	
 
 	/**
 	 * Constructor
@@ -58,11 +66,11 @@ public class AucklandMap extends GUI {
 		
 		// Get the closest node
 		Node closestNode = null;
-		double closestDistance = -1.0;
+		Double closestDistance = null;
 		
 		for (Node node : roadGraph.getNodes().values()) {
 			double nodeDistance = clickLocation.distance(node.getLocation());
-			if (closestDistance == -1.0 || nodeDistance < closestDistance) {
+			if (closestDistance == null || nodeDistance < closestDistance) {
 				closestNode = node;
 				closestDistance = nodeDistance;
 			}
@@ -127,25 +135,54 @@ public class AucklandMap extends GUI {
 		// NORTH, SOUTH, EAST, WEST, ZOOM_IN, ZOOM_OUT
 		switch (m) {
 			case NORTH:
-				origin = Location.newFromPoint(new Point(oldPoint.x, oldPoint.y-20), origin, scale);
+				origin = Location.newFromPoint(new Point(oldPoint.x, oldPoint.y-MOVE_FACTOR), origin, scale);
 				break;
 			case SOUTH:
-				origin = Location.newFromPoint(new Point(oldPoint.x, oldPoint.y+20), origin, scale);
+				origin = Location.newFromPoint(new Point(oldPoint.x, oldPoint.y+MOVE_FACTOR), origin, scale);
 				break;
 			case EAST:
-				origin = Location.newFromPoint(new Point(oldPoint.x+20, oldPoint.y), origin, scale);
+				origin = Location.newFromPoint(new Point(oldPoint.x+MOVE_FACTOR, oldPoint.y), origin, scale);
 				break;
 			case WEST:
-				origin = Location.newFromPoint(new Point(oldPoint.x-20, oldPoint.y), origin, scale);
+				origin = Location.newFromPoint(new Point(oldPoint.x-MOVE_FACTOR, oldPoint.y), origin, scale);
 				break;
 			case ZOOM_IN:
-				scale = scale*1.2;
+				setOriginFromZoom(1 - ZOOM_FACTOR);
+				scale = scale/(1 - ZOOM_FACTOR);
 				break;
 			case ZOOM_OUT:
-				scale = scale/1.2;
+				setOriginFromZoom(1 + ZOOM_FACTOR);
+				scale = scale/(1 + ZOOM_FACTOR);
 				break;
 			default:
 		}
+	}
+	
+	private void setOriginFromZoom(double zoom) {
+		int height = (int) getDrawingAreaDimension().getHeight();
+		int width = (int) getDrawingAreaDimension().getWidth();
+		List<Point> vertices = new ArrayList<Point>();
+		List<Location> loc = new ArrayList<Location>();
+		double locWidth;
+		double locHeight;
+		double dx, dy;
+		
+		vertices.add(new Point(0,0));
+		vertices.add(new Point(0,height));
+		vertices.add(new Point(width,0));
+		vertices.add(new Point(width,height));
+		
+		for (int i=0; i<4; i++) {
+			loc.add(Location.newFromPoint(vertices.get(i), origin, scale));
+		}
+		
+		locWidth = loc.get(2).x - loc.get(0).x;
+		locHeight = loc.get(1).y - loc.get(0).y;
+		
+		dx = (locWidth - locWidth*zoom) / 2;
+		dy = (locHeight - locHeight*zoom) / 2;
+		
+		origin = origin.moveBy(dx, dy);
 	}
 
 	@Override
@@ -163,7 +200,7 @@ public class AucklandMap extends GUI {
 			
 			// Set initial origin and scale
 			origin = Location.newFromLatLon(loadGraphResult.northernMostLat, loadGraphResult.westernMostLon);
-			scale = 400 / geoLength;
+			scale = getDrawingAreaDimension().getWidth() / geoLength;
 			
 		} catch (FileNotFoundException e) {
 			getTextOutputArea().append("Could not find file :(\n");
