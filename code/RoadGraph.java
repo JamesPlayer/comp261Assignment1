@@ -22,6 +22,8 @@ public class RoadGraph {
 	private Set<Segment> segments;
 	
 	private Map<Integer, Road> roads;
+	
+	private RoadTrie roadTrie;
 
 	/**
 	 * @return the nodes
@@ -72,6 +74,7 @@ public class RoadGraph {
 		nodes = new HashMap<Integer, Node>();
 		segments = new HashSet<Segment>();
 		roads = new HashMap<Integer, Road>();
+		roadTrie = new RoadTrie();
 	}
 
 	/**
@@ -180,6 +183,9 @@ public class RoadGraph {
 			
 			// Add to road map
 			roads.put(id, road);
+			
+			// Add road to roadTrie 
+			roadTrie.add(road);
 			count++;
 		}
 		return count;
@@ -235,6 +241,11 @@ public class RoadGraph {
 			count++;
 		}
 		return new LoadNodesResult(northernMostLat, westernMostLon, southernMostLat, easternMostLon, count);
+	}
+	
+	public RoadTrieGetAllResult getRoadsWithPrefix(String prefix) {
+		return roadTrie.getAll(prefix);
+		
 	}
 	
 }

@@ -114,6 +114,7 @@ public class AucklandMap extends GUI {
 			}
 		}
 		
+		
 		// Handle no road found
 		if (foundRoads.isEmpty()) {
 			getTextOutputArea().append("No roads matched your search\n");
