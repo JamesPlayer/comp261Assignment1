@@ -104,19 +104,19 @@ public class AucklandMap extends GUI {
 		// Remove any existing highlighted segments
 		highlightedSegments.clear();
 		
-		String roadName = getSearchBox().getText();
-		Set<Road> foundRoads = new HashSet<Road>();
+		String prefix = getSearchBox().getText();
+		RoadTrieGetAllResult roadTrieGetAllResult = roadGraph.getRoadsWithPrefix(prefix);
+		List<Road> foundRoads = roadTrieGetAllResult.roads;
+		boolean isExactMatch = roadTrieGetAllResult.node != null ? roadTrieGetAllResult.node.isMarked() : false;
 		
-		// Find road with this exact name
-		for (Road road : roadGraph.getRoads().values()) {
-			if (road.getName().equals(roadName)) {
-				foundRoads.add(road);
-			}
+		// If it's an exact match then only add the exact road to results
+		if (isExactMatch) {
+			foundRoads.clear();
+			foundRoads.add(roadTrieGetAllResult.node.getValue());
 		}
 		
-		
 		// Handle no road found
-		if (foundRoads.isEmpty()) {
+		if (foundRoads == null || foundRoads.isEmpty()) {
 			getTextOutputArea().append("No roads matched your search\n");
 			return;
 		}
@@ -127,7 +127,8 @@ public class AucklandMap extends GUI {
 			highlightedSegments.addAll(road.getSegments());
 			count++;
 		}
-		getTextOutputArea().append(String.format("Highlighted %d road(s) matching your search\n", count));
+		getTextOutputArea().append(String.format("Highlighted %d road(s) matching your search:\n", count));
+		
 	}
 
 	@Override
