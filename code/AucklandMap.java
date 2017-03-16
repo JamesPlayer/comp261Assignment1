@@ -123,11 +123,12 @@ public class AucklandMap extends GUI {
 		
 		// Add all segments from roads that were found
 		int count = 0;
+		getTextOutputArea().append(String.format("Highlighted %d road(s) matching your search:\n", foundRoads.size()));
 		for (Road road : foundRoads) {			
 			highlightedSegments.addAll(road.getSegments());
-			count++;
+			getTextOutputArea().append(String.format("%s\n", road.getName()));
 		}
-		getTextOutputArea().append(String.format("Highlighted %d road(s) matching your search:\n", count));
+		
 		
 	}
 

@@ -79,7 +79,7 @@ public class RoadTrie {
 		RoadTrie node = this;
 		for (char c : road.getName().toCharArray()) {
 			if (!node.getChildren().containsKey(c)) {
-				node.addChild(c, null);
+				node.addChild(c, new RoadTrie());
 			}
 			node = node.getChildren().get(c);
 		}
