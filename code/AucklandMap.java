@@ -39,6 +39,11 @@ public class AucklandMap extends GUI {
 	@Override
 	protected void redraw(Graphics g) {
 		
+		// Draw polygons
+		for (Polygon polygon : roadGraph.getPolygons()) {
+			polygon.draw(g, origin, scale);
+		}
+		
 		// Draw segments
 		for (Segment segment : roadGraph.getSegments()) {
 			segment.draw(g, origin, scale);

@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Polygon {
@@ -42,6 +44,28 @@ public class Polygon {
 	public Polygon(Integer type, List<Location> coords) {
 		this.type = type;
 		this.coords = coords;
+	}
+	
+	public void draw(Graphics g, Location origin, double scale) {
+		
+		// Would set colors here for the different types, if I knew what each type represented!
+		// For now, just setting all polygons to sea blue, seems to draw the ocean quite nicely
+		switch (type) {
+			default:
+				g.setColor(Color.decode("0x76E1FF"));
+		}
+		
+		int[] xPoints = new int[coords.size()];
+		int[] yPoints = new int[coords.size()];
+		int i = 0;
+		
+		for (Location location : coords) {
+			xPoints[i] = location.asPoint(origin, scale).x;
+			yPoints[i] = location.asPoint(origin, scale).y;
+			i++;
+		}
+		
+		g.fillPolygon(xPoints, yPoints, i);
 	}
 	
 	

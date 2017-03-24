@@ -150,7 +150,7 @@ public class RoadGraph {
 		while ((line = data.readLine()) != null) {
 			
 			// Set type
-			if (line.split("=").length == 2 && line.split("=")[0] == "Type") {
+			if (line.split("=").length == 2 && line.split("=")[0].equals("Type")) {
 				type = Integer.decode(line.split("=")[1]);
 			}
 			

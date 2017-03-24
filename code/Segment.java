@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Segment {
 	
-	private static final Color ROAD_COLOR = Color.RED;
+	private static final Color ROAD_COLOR = Color.DARK_GRAY;
 	
 	private static final Color HIGHLIGHT_COLOR = Color.GREEN;
 	

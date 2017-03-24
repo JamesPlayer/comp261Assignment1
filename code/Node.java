@@ -10,7 +10,9 @@ import java.util.Set;
  */
 public class Node {
 	
-	private static final int SQUARE_SIZE = 6;
+	private static final int SQUARE_SIZE = 1;
+	
+	private static final int HIGHLIGHT_SIZE = 7;
 	
 	private static final Color SQUARE_COLOR = Color.BLUE;
 	
@@ -110,16 +112,14 @@ public class Node {
 	}
 
 	public void draw(Graphics g, Location origin, double scale) {
-		draw(g, origin, scale, SQUARE_COLOR);
-	}
-	
-	public void draw(Graphics g, Location origin, double scale, Color color) {
-		g.setColor(color);
+		g.setColor(SQUARE_COLOR);
 		Point point = location.asPoint(origin, scale);
-		g.fillRect(point.x-3, point.y-3, SQUARE_SIZE, SQUARE_SIZE);
+		g.fillRect(point.x, point.y, SQUARE_SIZE, SQUARE_SIZE);
 	}
 	
 	public void highlight(Graphics g, Location origin, double scale) {
-		draw(g, origin, scale, HIGHLIGHT_COLOR);
+		g.setColor(HIGHLIGHT_COLOR);
+		Point point = location.asPoint(origin, scale);
+		g.fillRect(point.x-(HIGHLIGHT_SIZE/2), point.y-(HIGHLIGHT_SIZE/2), HIGHLIGHT_SIZE, HIGHLIGHT_SIZE);
 	}
 }
