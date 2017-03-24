@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,8 @@ public class RoadGraph {
 	private Map<Integer, Road> roads;
 	
 	private RoadTrie roadTrie;
+	
+	private Set<Polygon> polygons;
 
 	/**
 	 * @return the nodes
@@ -68,6 +71,34 @@ public class RoadGraph {
 	}
 
 	/**
+	 * @return the roadTrie
+	 */
+	public RoadTrie getRoadTrie() {
+		return roadTrie;
+	}
+
+	/**
+	 * @param roadTrie the roadTrie to set
+	 */
+	public void setRoadTrie(RoadTrie roadTrie) {
+		this.roadTrie = roadTrie;
+	}
+
+	/**
+	 * @return the polygons
+	 */
+	public Set<Polygon> getPolygons() {
+		return polygons;
+	}
+
+	/**
+	 * @param polygons the polygons to set
+	 */
+	public void setPolygons(Set<Polygon> polygons) {
+		this.polygons = polygons;
+	}
+
+	/**
 	 * Constructor
 	 */
 	public RoadGraph() {
@@ -75,6 +106,7 @@ public class RoadGraph {
 		segments = new HashSet<Segment>();
 		roads = new HashMap<Integer, Road>();
 		roadTrie = new RoadTrie();
+		polygons = new HashSet<Polygon>();
 	}
 
 	/**
@@ -86,12 +118,59 @@ public class RoadGraph {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public LoadGraphResult load(File nodesFile, File roadsFile, File segmentsFile) throws FileNotFoundException, IOException {
+	public LoadGraphResult load(File nodesFile, File roadsFile, File segmentsFile, File polygonsFile) throws FileNotFoundException, IOException {
 		int numRoadsAdded = loadRoads(roadsFile);
 		LoadNodesResult loadNodesResult = loadNodes(nodesFile);
 		int numSegmentsAdded = loadSegments(segmentsFile);
 		String result = String.format("Added %d roads, %d intersections and %d road segments", numRoadsAdded, loadNodesResult.count, numSegmentsAdded);
+		
+		
+		// Add polygon data
+		if (polygonsFile != null) {			
+			loadPolygons(polygonsFile);
+		}
+		
 		return new LoadGraphResult(loadNodesResult.northernMostLat, loadNodesResult.westernMostLon, loadNodesResult.southernMostLat, loadNodesResult.easternMostLon, loadNodesResult.count, numRoadsAdded, numSegmentsAdded, result);
+	}
+
+	/**
+	 * Add polygon data
+	 * @param polygonsFile
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private void loadPolygons(File polygonsFile) throws FileNotFoundException, IOException {
+		BufferedReader data = new BufferedReader(new FileReader(polygonsFile));
+		String line;
+		Integer type = null;
+		String coordsString;
+		List<String> coordPairs;
+		List<Location> coords;
+		
+		while ((line = data.readLine()) != null) {
+			
+			// Set type
+			if (line.split("=").length == 2 && line.split("=")[0] == "Type") {
+				type = Integer.decode(line.split("=")[1]);
+			}
+			
+			// Set coords
+			if (line.split("=").length == 2 && line.split("=")[0].startsWith("Data")) {
+				
+				coordsString = line.split("=")[1];
+				coordPairs = Arrays.asList(coordsString.substring(1,coordsString.lastIndexOf(')')).split("\\),\\("));
+				coords = new ArrayList<Location>();
+				
+				for (String coordPair : coordPairs) {
+					double lat = Double.parseDouble(coordPair.split(",")[0]);
+					double lon = Double.parseDouble(coordPair.split(",")[1]);
+					Location location = Location.newFromLatLon(lat, lon);
+					coords.add(location);
+				}
+				
+				polygons.add(new Polygon(type, coords));
+			}
+		}
 	}
 
 	/**

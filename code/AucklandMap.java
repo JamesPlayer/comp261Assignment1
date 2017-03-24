@@ -195,7 +195,7 @@ public class AucklandMap extends GUI {
 		try {
 			
 			// Load files data into graph
-			LoadGraphResult loadGraphResult = roadGraph.load(nodes, roads, segments);
+			LoadGraphResult loadGraphResult = roadGraph.load(nodes, roads, segments, polygons);
 			getTextOutputArea().append(loadGraphResult.result + "\n");
 			
 			// Get topLeft and bottomRight points to get initial origin and scale
