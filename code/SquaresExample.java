@@ -1,11 +1,16 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 /**
  * This is a small example class to demonstrate extending the GUI class and
@@ -66,6 +71,12 @@ public class SquaresExample extends GUI {
 	protected void onSearch() {
 		getTextOutputArea().setText(getSearchBox().getText());
 	}
+	
+	@Override
+	protected void onComboKeyPressed(JComboBox comboBox2, JTextField editor, KeyEvent e) {}
+	
+	@Override
+	protected void onComboSelection(JComboBox comboBox, ActionEvent e) {}
 
 	@Override
 	protected void onMove(Move m) {

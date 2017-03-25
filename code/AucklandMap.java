@@ -1,5 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +11,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JTextField;
+import javax.swing.plaf.basic.ComboPopup;
 
 public class AucklandMap extends GUI {
 	
@@ -105,19 +112,51 @@ public class AucklandMap extends GUI {
 
 	@Override
 	protected void onSearch() {
+		String prefix = getSearchBox().getText();
+		RoadTrieGetAllResult searchResults = roadGraph.getRoadsWithPrefix(prefix);
+		updateSearchResults(searchResults);
+	}
+	
+	protected void onComboSelection(JComboBox comboBox, ActionEvent e) {
+		Road road = (Road) comboBox.getSelectedItem();
+		if (road == null) return;
+		
+		// Remove any existing highlighted segments
+		highlightedSegments.clear();
+		highlightedSegments.addAll(road.getSegments());
+		getTextOutputArea().append(String.format("Highlighted %s\n", road.getName()));
+	}
+	
+	@Override
+	protected void onComboKeyPressed(JComboBox comboBox, JTextField editor, KeyEvent e) {
+		String prefix = editor.getText();
+		RoadTrieGetAllResult searchResults = roadGraph.getRoadsWithPrefix(prefix);
+		updateSearchResults(searchResults);
+		List<Road> foundRoads = searchResults.roads;
+		
+		// Update combo box options without it setting a new default value
+		removeComboBoxActionListener();
+		comboBox.removeAllItems();	
+		for (Road road : foundRoads) {
+			comboBox.addItem(road);
+		}
+		editor.setText(prefix);
+		addComboBoxActionListener();
+		comboBox.showPopup();
+	}
+	
+	protected void updateSearchResults(RoadTrieGetAllResult searchResults) {
 		
 		// Remove any existing highlighted segments
 		highlightedSegments.clear();
 		
-		String prefix = getSearchBox().getText();
-		RoadTrieGetAllResult roadTrieGetAllResult = roadGraph.getRoadsWithPrefix(prefix);
-		List<Road> foundRoads = roadTrieGetAllResult.roads;
-		boolean isExactMatch = roadTrieGetAllResult.node != null ? roadTrieGetAllResult.node.isMarked() : false;
+		List<Road> foundRoads = searchResults.roads;
+		boolean isExactMatch = searchResults.node != null ? searchResults.node.isMarked() : false;
 		
 		// If it's an exact match then only add the exact road to results
 		if (isExactMatch) {
 			foundRoads.clear();
-			foundRoads.add(roadTrieGetAllResult.node.getValue());
+			foundRoads.add(searchResults.node.getValue());
 		}
 		
 		// Handle no road found
@@ -127,14 +166,11 @@ public class AucklandMap extends GUI {
 		}
 		
 		// Add all segments from roads that were found
-		int count = 0;
 		getTextOutputArea().append(String.format("Highlighted %d road(s) matching your search:\n", foundRoads.size()));
 		for (Road road : foundRoads) {			
 			highlightedSegments.addAll(road.getSegments());
 			getTextOutputArea().append(String.format("%s\n", road.getName()));
 		}
-		
-		
 	}
 
 	@Override

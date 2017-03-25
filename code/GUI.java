@@ -15,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -26,6 +27,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.text.DefaultCaret;
 
 /**
@@ -69,6 +71,10 @@ public abstract class GUI {
 	 * JTextField object that is the search box itself.
 	 */
 	protected abstract void onSearch();
+	
+	protected abstract void onComboKeyPressed(JComboBox comboBox, JTextField editor, KeyEvent e);
+	
+	protected abstract void onComboSelection(JComboBox comboBox, ActionEvent e);
 
 	/**
 	 * Is called whenever a navigation button is pressed. An instance of the
@@ -164,7 +170,9 @@ public abstract class GUI {
 	private JTextArea textOutputArea;
 
 	private JTextField search;
+	private JComboBox comboBox;
 	private JFileChooser fileChooser;
+	private ActionListener comboBoxActionListener;
 
 	public GUI() {
 		initialise();
@@ -172,6 +180,13 @@ public abstract class GUI {
 
 	@SuppressWarnings("serial")
 	private void initialise() {
+		
+		comboBoxActionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				onComboSelection(comboBox, e);
+				redraw();
+			}
+		};
 
 		/*
 		 * first, we make the buttons etc. that go along the top bar.
@@ -305,6 +320,30 @@ public abstract class GUI {
 				}
 			});
 		}
+		
+		// Combobox search
+		comboBox = new JComboBox();
+		comboBox.setEditable(true);
+		comboBox.setMaximumRowCount(20);
+		comboBox.setMaximumSize(new Dimension(0, 25));
+		JTextField editor = (JTextField) comboBox.getEditor().getEditorComponent();
+		editor.setColumns(SEARCH_COLS);
+		ComboPopup popup = (ComboPopup) comboBox.getUI().getAccessibleChild(comboBox, 0);
+		((JComponent) popup).setPreferredSize(new Dimension(204, 360));
+		((JComponent) popup).setLayout(new GridLayout(1, 1));
+				
+		editor.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				// don't fire an event on up or down arrow
+				if (e.getKeyCode() == 38 || e.getKeyCode() == 40 || e.getKeyCode() == 10)
+					return;
+				
+				onComboKeyPressed(comboBox, editor, e);
+				redraw();
+			}
+		});
+		
+		comboBox.addActionListener(comboBoxActionListener);
 
 		/*
 		 * next, make the top bar itself and arrange everything inside of it.
@@ -355,8 +394,9 @@ public abstract class GUI {
 
 		controls.add(new JLabel("Search"));
 		controls.add(Box.createRigidArea(new Dimension(5, 0)));
-		controls.add(search);
-
+//		controls.add(search);
+		controls.add(comboBox);
+		
 		/*
 		 * then make the drawing canvas, which is really just a boring old
 		 * JComponent with the paintComponent method overridden to paint
@@ -430,6 +470,14 @@ public abstract class GUI {
 		frame.pack();
 		frame.setVisible(true);
 	}
+	
+	public void removeComboBoxActionListener() {
+		comboBox.removeActionListener(comboBoxActionListener);
+	}
+	
+	public void addComboBoxActionListener() {
+		comboBox.addActionListener(comboBoxActionListener);
+	}
+
 }
 
-// code for COMP261 assignments
