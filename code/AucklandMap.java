@@ -118,6 +118,9 @@ public class AucklandMap extends GUI {
 	}
 	
 	protected void onComboSelection(JComboBox comboBox, ActionEvent e) {
+		
+		JTextField editor = (JTextField) comboBox.getEditor().getEditorComponent();
+		
 		Road road = (Road) comboBox.getSelectedItem();
 		if (road == null) return;
 		
@@ -125,10 +128,12 @@ public class AucklandMap extends GUI {
 		highlightedSegments.clear();
 		highlightedSegments.addAll(road.getSegments());
 		getTextOutputArea().append(String.format("Highlighted %s\n", road.getName()));
+		editor.setText(road.getName());
 	}
 	
 	@Override
-	protected void onComboKeyPressed(JComboBox comboBox, JTextField editor, KeyEvent e) {
+	protected void onComboKeyPressed(JComboBox comboBox, KeyEvent e) {
+		JTextField editor = (JTextField) comboBox.getEditor().getEditorComponent();
 		String prefix = editor.getText();
 		RoadTrieGetAllResult searchResults = roadGraph.getRoadsWithPrefix(prefix);
 		updateSearchResults(searchResults);

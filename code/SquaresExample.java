@@ -73,7 +73,7 @@ public class SquaresExample extends GUI {
 	}
 	
 	@Override
-	protected void onComboKeyPressed(JComboBox comboBox2, JTextField editor, KeyEvent e) {}
+	protected void onComboKeyPressed(JComboBox comboBox2, KeyEvent e) {}
 	
 	@Override
 	protected void onComboSelection(JComboBox comboBox, ActionEvent e) {}

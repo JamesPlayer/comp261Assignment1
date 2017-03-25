@@ -72,7 +72,7 @@ public abstract class GUI {
 	 */
 	protected abstract void onSearch();
 	
-	protected abstract void onComboKeyPressed(JComboBox comboBox, JTextField editor, KeyEvent e);
+	protected abstract void onComboKeyPressed(JComboBox comboBox, KeyEvent e);
 	
 	protected abstract void onComboSelection(JComboBox comboBox, ActionEvent e);
 
@@ -334,11 +334,12 @@ public abstract class GUI {
 				
 		editor.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
-				// don't fire an event on up or down arrow
-				if (e.getKeyCode() == 38 || e.getKeyCode() == 40 || e.getKeyCode() == 10)
+								
+				// don't fire an event on up or down arrow, left or right
+				if (e.getKeyCode() == 37 || e.getKeyCode() == 38 || e.getKeyCode() == 39 || e.getKeyCode() == 40 || e.getKeyCode() == 10)
 					return;
 				
-				onComboKeyPressed(comboBox, editor, e);
+				onComboKeyPressed(comboBox, e);
 				redraw();
 			}
 		});
