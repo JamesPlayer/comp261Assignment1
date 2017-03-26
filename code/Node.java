@@ -20,7 +20,9 @@ public class Node {
 
 	private int id;
 	
-	private Location location;
+	private double lat;
+	
+	private double lon;
 	
 	private Set<Segment> outSegs;
 	
@@ -41,17 +43,31 @@ public class Node {
 	}
 
 	/**
-	 * @return the location
+	 * @return the lat
 	 */
-	public Location getLocation() {
-		return location;
+	public double getLat() {
+		return lat;
 	}
 
 	/**
-	 * @param location the location to set
+	 * @param lat the lat to set
 	 */
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	/**
+	 * @return the lon
+	 */
+	public double getLon() {
+		return lon;
+	}
+
+	/**
+	 * @param lon the lon to set
+	 */
+	public void setLon(double lon) {
+		this.lon = lon;
 	}
 
 	/**
@@ -104,21 +120,24 @@ public class Node {
 	 * @param outSegs
 	 * @param inSegs
 	 */
-	public Node(int id, Location location, Set<Segment> outSegs, Set<Segment> inSegs) {
+	public Node(int id, double lat, double lon, Set<Segment> outSegs, Set<Segment> inSegs) {
 		this.id = id;
-		this.location = location;
+		this.lat = lat;
+		this.lon = lon;
 		this.outSegs = outSegs;
 		this.inSegs = inSegs;
 	}
 
 	public void draw(Graphics g, Location origin, double scale) {
 		g.setColor(SQUARE_COLOR);
+		Location location = Location.newFromLatLon(lat, lon);
 		Point point = location.asPoint(origin, scale);
 		g.fillRect(point.x, point.y, SQUARE_SIZE, SQUARE_SIZE);
 	}
 	
 	public void highlight(Graphics g, Location origin, double scale) {
 		g.setColor(HIGHLIGHT_COLOR);
+		Location location = Location.newFromLatLon(lat, lon);
 		Point point = location.asPoint(origin, scale);
 		g.fillRect(point.x-(HIGHLIGHT_SIZE/2), point.y-(HIGHLIGHT_SIZE/2), HIGHLIGHT_SIZE, HIGHLIGHT_SIZE);
 	}

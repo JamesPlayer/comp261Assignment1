@@ -83,7 +83,7 @@ public class AucklandMap extends GUI {
 		Double closestDistance = null;
 		
 		for (Node node : roadGraph.getNodes().values()) {
-			double nodeDistance = clickLocation.distance(node.getLocation());
+			double nodeDistance = clickLocation.distance(Location.newFromLatLon(node.getLat(), node.getLon()));
 			if (closestDistance == null || nodeDistance < closestDistance) {
 				closestNode = node;
 				closestDistance = nodeDistance;
@@ -94,6 +94,7 @@ public class AucklandMap extends GUI {
 		
 		// Show some info about the intersection
 		getTextOutputArea().append(String.format("Intersection id: %d\n", closestNode.getId()));
+		getTextOutputArea().append(String.format("Coords: %.5f, %.5f\n", closestNode.getLat(), closestNode.getLon()));
 		
 		// Highlight it on the page
 		highlightedNode = closestNode;
@@ -117,6 +118,7 @@ public class AucklandMap extends GUI {
 		updateSearchResults(searchResults);
 	}
 	
+	@Override
 	protected void onComboSelection(JComboBox comboBox, ActionEvent e) {
 		
 		JTextField editor = (JTextField) comboBox.getEditor().getEditorComponent();
@@ -140,6 +142,8 @@ public class AucklandMap extends GUI {
 		List<Road> foundRoads = searchResults.roads;
 		
 		// Update combo box options without it setting a new default value
+		// The only way to do this is to remove listener, add new options,
+		// then re-add listener
 		removeComboBoxActionListener();
 		comboBox.removeAllItems();	
 		for (Road road : foundRoads) {
@@ -209,6 +213,10 @@ public class AucklandMap extends GUI {
 		}
 	}
 	
+	/**
+	 * Taken from examples in lecture slides
+	 * @param zoom
+	 */
 	private void setOriginFromZoom(double zoom) {
 		int height = (int) getDrawingAreaDimension().getHeight();
 		int width = (int) getDrawingAreaDimension().getWidth();

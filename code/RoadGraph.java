@@ -293,10 +293,9 @@ public class RoadGraph {
 			int id 				= Integer.parseInt(values[0]);
 			double lat			= Double.parseDouble(values[1]);
 			double lon			= Double.parseDouble(values[2]);
-			Location location   = Location.newFromLatLon(lat, lon);
 			
 			// Create node
-			Node node = new Node(id, location, new HashSet<Segment>(), new HashSet<Segment>());
+			Node node = new Node(id, lat, lon, new HashSet<Segment>(), new HashSet<Segment>());
 			
 			// Add to nodes map
 			nodes.put(id, node);
