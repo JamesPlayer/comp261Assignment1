@@ -17,7 +17,7 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.plaf.basic.ComboPopup;
 
-public class AucklandMap extends GUI {
+public class Main extends GUI {
 	
 	private static final double ZOOM_FACTOR = 0.2;
 	
@@ -37,7 +37,7 @@ public class AucklandMap extends GUI {
 	/**
 	 * Constructor
 	 */
-	public AucklandMap() {
+	public Main() {
 		roadGraph = new RoadGraph();
 		highlightedNode = null;
 		highlightedSegments = new HashSet<Segment>();
@@ -270,7 +270,7 @@ public class AucklandMap extends GUI {
 	}
 
 	public static void main(String[] args) {
-		new AucklandMap();
+		new Main();
 	}
 
 }
