@@ -326,4 +326,7 @@ public class RoadGraph {
 		
 	}
 	
+	public AStarFringeNode AStarSearch(Node start, Node end) {
+		
+	}
 }

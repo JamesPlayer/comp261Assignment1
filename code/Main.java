@@ -122,9 +122,7 @@ public class Main extends GUI {
 			tripDest = closestNode;
 			tripState = TRIP_STATE_NONE;
 			showShortestPath();
-		}
-		
-		
+		}		
 	}
 	
 	protected void showShortestPath() {
