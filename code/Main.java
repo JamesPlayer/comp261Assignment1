@@ -19,19 +19,31 @@ import javax.swing.plaf.basic.ComboPopup;
 
 public class Main extends GUI {
 	
-	private static final double ZOOM_FACTOR = 0.2;
+	protected static final int TRIP_STATE_NONE = 0;
+	protected static final int TRIP_STATE_SELECT_ORIGIN = 1;
+	protected static final int TRIP_STATE_SELECT_DEST = 2;
 	
-	private static final int MOVE_FACTOR = 20; // In pixels
+	protected static final double ZOOM_FACTOR = 0.2;
 	
-	private RoadGraph roadGraph;
+	protected static final int MOVE_FACTOR = 20; // In pixels
 	
-	private Location origin;
+	protected RoadGraph roadGraph;
 	
-	private double scale;
+	protected Location origin;
+	
+	protected double scale;
 		
-	private Node highlightedNode;
+	protected Node highlightedNode;
 	
-	private Set<Segment> highlightedSegments;
+	protected Set<Segment> highlightedSegments;
+	
+	protected int tripState;
+	
+	protected Node tripOrigin;
+	
+	protected Node tripDest;
+	
+	
 	
 
 	/**
@@ -41,6 +53,7 @@ public class Main extends GUI {
 		roadGraph = new RoadGraph();
 		highlightedNode = null;
 		highlightedSegments = new HashSet<Segment>();
+		tripState = TRIP_STATE_NONE;
 	}
 
 	@Override
@@ -99,9 +112,29 @@ public class Main extends GUI {
 		// Highlight it on the page
 		highlightedNode = closestNode;
 		
+		if (tripState == TRIP_STATE_NONE) {
+			printNodesFromRoad(closestNode);
+		} else if (tripState == TRIP_STATE_SELECT_ORIGIN) {
+			tripOrigin = closestNode;
+			tripState = TRIP_STATE_SELECT_DEST;
+			getTextOutputArea().append("Select destination\n");
+		} else {
+			tripDest = closestNode;
+			tripState = TRIP_STATE_NONE;
+			showShortestPath();
+		}
+		
+		
+	}
+	
+	protected void showShortestPath() {
+		getTextOutputArea().append("Time to get to work on showing the shortest path!\n");
+	}
+	
+	protected void printNodesFromRoad(Node node) {
 		// Find the roads at the intersection and display the info
-		Set<Segment> segments = new HashSet<Segment>(closestNode.getInSegs());
-		segments.addAll(closestNode.getOutSegs());
+		Set<Segment> segments = new HashSet<Segment>(node.getInSegs());
+		segments.addAll(node.getOutSegs());
 		Set<String> roads = new HashSet<String>();
 		
 		for (Segment segment : segments) {
@@ -213,6 +246,13 @@ public class Main extends GUI {
 		}
 	}
 	
+	@Override
+	protected void onTripClick() {
+		tripState = TRIP_STATE_SELECT_ORIGIN;
+		getTextOutputArea().append("Please select origin\n");
+		
+	}
+	
 	/**
 	 * Taken from examples in lecture slides
 	 * @param zoom
@@ -272,5 +312,4 @@ public class Main extends GUI {
 	public static void main(String[] args) {
 		new Main();
 	}
-
 }

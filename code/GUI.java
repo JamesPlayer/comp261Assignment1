@@ -81,6 +81,8 @@ public abstract class GUI {
 	 * Move enum is passed, representing the button clicked by the user.
 	 */
 	protected abstract void onMove(Move m);
+	
+	protected abstract void onTripClick();
 
 	/**
 	 * Is called when the user has successfully selected a directory to load the
@@ -295,6 +297,14 @@ public abstract class GUI {
 				redraw();
 			}
 		});
+		
+		JButton trip = new JButton("Trip");
+		trip.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				onTripClick();
+				redraw();
+			}	
+		});
 
 		// next, make the search box at the top-right. we manually fix
 		// it's size, and add an action listener to call your code when
@@ -367,17 +377,18 @@ public abstract class GUI {
 		controls.setBorder(edge);
 
 		JPanel loadquit = new JPanel();
-		loadquit.setLayout(new GridLayout(2, 1));
+		loadquit.setLayout(new GridLayout(3, 1));
 		// manually set a fixed size for the panel containing the load and quit
 		// buttons (doesn't change with window resize).
-		loadquit.setMaximumSize(new Dimension(50, 100));
+		loadquit.setMaximumSize(new Dimension(50, 150));
 		loadquit.add(load);
 		loadquit.add(quit);
+		loadquit.add(trip);
 		controls.add(loadquit);
 		// rigid areas are invisible components that can be used to space
 		// components out.
 		controls.add(Box.createRigidArea(new Dimension(15, 0)));
-
+		
 		JPanel navigation = new JPanel();
 		navigation.setMaximumSize(new Dimension(150, 60));
 		navigation.setLayout(new GridLayout(2, 3));
