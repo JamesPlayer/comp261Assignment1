@@ -326,7 +326,7 @@ public class RoadGraph {
 		
 	}
 	
-	public List<Node> AStarSearch(Node start, Node end) {
+	public List<Segment> AStarSearch(Node start, Node end) {
 		AStarSearch aStarSearch = new AStarSearch();
 		return aStarSearch.getPath(start, end);
 	}

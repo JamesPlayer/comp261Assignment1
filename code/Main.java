@@ -43,7 +43,7 @@ public class Main extends GUI {
 	
 	protected Node tripDest;
 	
-	
+	protected List<Segment> tripSegments;
 	
 
 	/**
@@ -54,6 +54,7 @@ public class Main extends GUI {
 		highlightedNode = null;
 		highlightedSegments = new HashSet<Segment>();
 		tripState = TRIP_STATE_NONE;
+		tripSegments = new ArrayList<Segment>();
 	}
 
 	@Override
@@ -81,6 +82,11 @@ public class Main extends GUI {
 		
 		// Draw highlighted segments
 		for (Segment segment : highlightedSegments) {
+			segment.highlight(g, origin, scale);
+		}
+		
+		// Draw trip segments
+		for (Segment segment : tripSegments) {
 			segment.highlight(g, origin, scale);
 		}
 	}
@@ -126,7 +132,7 @@ public class Main extends GUI {
 	}
 	
 	protected void showShortestPath() {
-		getTextOutputArea().append("Time to get to work on showing the shortest path!\n");
+		tripSegments = roadGraph.AStarSearch(tripOrigin, tripDest);
 	}
 	
 	protected void printNodesFromRoad(Node node) {
