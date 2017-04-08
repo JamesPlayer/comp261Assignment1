@@ -1,8 +1,6 @@
 public class AStarFringeNode {
 
-	public Node origin;
-	
-	public Node dest;
+	public Segment segment;
 	
 	public double costFromStart;
 	
@@ -14,9 +12,8 @@ public class AStarFringeNode {
 	 * @param costFromStart
 	 * @param estToGoal
 	 */
-	public AStarFringeNode(Node origin, Node dest, double costFromStart, double estToGoal) {
-		this.origin = origin;
-		this.dest = dest;
+	public AStarFringeNode(Segment segment, double costFromStart, double estToGoal) {
+		this.segment = segment;
 		this.costFromStart = costFromStart;
 		this.estToGoal = estToGoal;
 	}

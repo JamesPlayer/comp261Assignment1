@@ -24,7 +24,12 @@ public class AStarSearch {
 	    @Override
 	    public int compare(AStarFringeNode x, AStarFringeNode y)
 	    {
-	        return (int) (x.estToGoal - y.estToGoal);
+	    	if (x.estToGoal < y.estToGoal) {
+	            return -1;
+	        } if (x.estToGoal > y.estToGoal) {
+	            return 1;
+	        }
+	        return 0;
 	    }
 	}
 	
@@ -32,29 +37,32 @@ public class AStarSearch {
 		
 		AStarFringeNode fringeNode;
 		
-		fringe.add(new AStarFringeNode(null, start, 0.0, heuristic(start, goal)));
+		fringe.add(new AStarFringeNode(new Segment(-1, 0, null, null, start, null), 0.0, heuristic(start, goal)));
 		
 		while (!fringe.isEmpty()) {
 			fringeNode = fringe.poll();
 			
+			if (visited.contains(fringeNode.segment.getEndNode())) {
+				continue;
+			}
+			
+			visited.add(fringeNode.segment.getEndNode());
+			
+			// Add segment to path
+			if (fringeNode.segment.getStartNode() != null) {
+				path.add(fringeNode.segment);
+			}
+			
 			// We found it
-			if (fringeNode.origin == goal) {
+			if (fringeNode.segment.getEndNode() == goal) {
 				return path;
 			}
 			
-			for (Segment segment : fringeNode.dest.getOutSegs()) {
-				
+			for (Segment segment : fringeNode.segment.getEndNode().getOutSegs()) {
 				Node neighbour = segment.getEndNode();
-				
-				if (visited.contains(neighbour)) {
-					continue;
-				}
-				
-				visited.add(neighbour);
 				double costToNeighbour = fringeNode.costFromStart + segment.getLength();
 				double estToGoal = costToNeighbour + heuristic(neighbour, goal);
-				fringe.add(new AStarFringeNode(fringeNode.dest, neighbour, costToNeighbour, estToGoal));
-				path.add(segment);
+				fringe.add(new AStarFringeNode(segment, costToNeighbour, estToGoal));
 			}
 		}
 		

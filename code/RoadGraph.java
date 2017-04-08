@@ -17,7 +17,7 @@ import java.util.Set;
  *
  */
 public class RoadGraph {
-	
+		
 	private Map<Integer, Node> nodes;
 	
 	private Set<Segment> segments;
@@ -254,7 +254,7 @@ public class RoadGraph {
 			String[] values 	= line.split("\t");
 			int id 				= Integer.parseInt(values[0]);
 			String name 		= values[2];
-			boolean isOneWay 	= values[4] != "0";
+			boolean isOneWay 	= !values[4].equals("0");
 			int speedLimit 		= Integer.parseInt(values[5]);
 			
 			// Create road

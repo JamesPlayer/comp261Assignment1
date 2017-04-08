@@ -132,6 +132,7 @@ public class Main extends GUI {
 	}
 	
 	protected void showShortestPath() {
+		tripSegments.clear();
 		tripSegments = roadGraph.AStarSearch(tripOrigin, tripDest);
 	}
 	
