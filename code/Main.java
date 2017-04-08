@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,6 +88,7 @@ public class Main extends GUI {
 		
 		// Draw trip segments
 		for (Segment segment : tripSegments) {
+			getTextOutputArea().append(String.format("%s: %.2f kms\n", segment.getRoad().getName(), segment.getLength()));
 			segment.highlight(g, origin, scale);
 		}
 	}
@@ -133,7 +135,14 @@ public class Main extends GUI {
 	
 	protected void showShortestPath() {
 		tripSegments.clear();
-		tripSegments = roadGraph.AStarSearch(tripOrigin, tripDest);
+		AStarFringeNode node = roadGraph.AStarSearch(tripOrigin, tripDest);
+		
+		while (node.from != null) {
+			tripSegments.add(node.segment);
+			node = node.from;
+		}
+		
+		Collections.reverse(tripSegments); 
 	}
 	
 	protected void printNodesFromRoad(Node node) {

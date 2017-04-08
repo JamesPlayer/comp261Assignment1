@@ -8,14 +8,11 @@ import java.util.List;
 public class AStarSearch {
 
 	PriorityQueue<AStarFringeNode> fringe;
-	
-	List<Segment> path;
-	
+		
 	Set<Node> visited;
 	
 	public AStarSearch() {
 		fringe = new PriorityQueue<AStarFringeNode>(10, new AStarFringeComparator());
-		path = new ArrayList<Segment>();
 		visited = new HashSet<Node>();
 	}
 
@@ -33,11 +30,17 @@ public class AStarSearch {
 	    }
 	}
 	
-	public List<Segment> getPath(Node start, Node goal) {
+	/**
+	 * Return the last fringe node so we can trace it back to the first
+	 * @param start
+	 * @param goal
+	 * @return
+	 */
+	public AStarFringeNode getPath(Node start, Node goal) {
 		
-		AStarFringeNode fringeNode;
+		AStarFringeNode fringeNode = new AStarFringeNode(new Segment(-1, 0, null, null, start, null), null, 0.0, heuristic(start, goal));
 		
-		fringe.add(new AStarFringeNode(new Segment(-1, 0, null, null, start, null), 0.0, heuristic(start, goal)));
+		fringe.add(fringeNode);
 		
 		while (!fringe.isEmpty()) {
 			fringeNode = fringe.poll();
@@ -48,25 +51,20 @@ public class AStarSearch {
 			
 			visited.add(fringeNode.segment.getEndNode());
 			
-			// Add segment to path
-			if (fringeNode.segment.getStartNode() != null) {
-				path.add(fringeNode.segment);
-			}
-			
 			// We found it
 			if (fringeNode.segment.getEndNode() == goal) {
-				return path;
+				return fringeNode;
 			}
 			
 			for (Segment segment : fringeNode.segment.getEndNode().getOutSegs()) {
 				Node neighbour = segment.getEndNode();
 				double costToNeighbour = fringeNode.costFromStart + segment.getLength();
 				double estToGoal = costToNeighbour + heuristic(neighbour, goal);
-				fringe.add(new AStarFringeNode(segment, costToNeighbour, estToGoal));
+				fringe.add(new AStarFringeNode(segment, fringeNode, costToNeighbour, estToGoal));
 			}
 		}
 		
-		return path;
+		return fringeNode;
 		
 	}
 	
