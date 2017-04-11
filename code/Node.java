@@ -27,6 +27,8 @@ public class Node {
 	private Set<Segment> outSegs;
 	
 	private Set<Segment> inSegs;
+	
+	private Set<Node> neighbours;
 
 	/**
 	 * @return the id
@@ -115,17 +117,37 @@ public class Node {
 	}
 
 	/**
+	 * @return the neighbours
+	 */
+	public Set<Node> getNeighbours() {
+		return neighbours;
+	}
+
+	/**
+	 * @param neighbours the neighbours to set
+	 */
+	public void setNeighbours(Set<Node> neighbours) {
+		this.neighbours = neighbours;
+	}
+	
+	public void addNeighbour(Node neighbour) {
+		this.neighbours.add(neighbour);
+	}
+
+	/**
 	 * @param id
 	 * @param location
 	 * @param outSegs
 	 * @param inSegs
+	 * @param neighbours
 	 */
-	public Node(int id, double lat, double lon, Set<Segment> outSegs, Set<Segment> inSegs) {
+	public Node(int id, double lat, double lon, Set<Segment> outSegs, Set<Segment> inSegs, Set<Node> neighbours) {
 		this.id = id;
 		this.lat = lat;
 		this.lon = lon;
 		this.outSegs = outSegs;
 		this.inSegs = inSegs;
+		this.neighbours = neighbours;
 	}
 
 	public void draw(Graphics g, Location origin, double scale) {

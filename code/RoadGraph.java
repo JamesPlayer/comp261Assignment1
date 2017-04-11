@@ -232,6 +232,10 @@ public class RoadGraph {
 				segments.add(reverseSegment);
 				count++;
 			}
+			
+			// Add start node as a neighbour to end node and add end node as a neighbour to start node
+			startNode.addNeighbour(endNode);
+			endNode.addNeighbour(startNode);
 		}
 		return count;
 	}
@@ -295,7 +299,7 @@ public class RoadGraph {
 			double lon			= Double.parseDouble(values[2]);
 			
 			// Create node
-			Node node = new Node(id, lat, lon, new HashSet<Segment>(), new HashSet<Segment>());
+			Node node = new Node(id, lat, lon, new HashSet<Segment>(), new HashSet<Segment>(), new HashSet<Node>());
 			
 			// Add to nodes map
 			nodes.put(id, node);
