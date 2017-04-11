@@ -114,8 +114,15 @@ public class Main extends GUI {
 		if (closestNode == null) return;
 		
 		// Show some info about the intersection
-		getTextOutputArea().append(String.format("Intersection id: %d\n", closestNode.getId()));
+		getTextOutputArea().append(String.format("Node id: %d\n", closestNode.getId()));
 		getTextOutputArea().append(String.format("Coords: %.5f, %.5f\n", closestNode.getLat(), closestNode.getLon()));
+		getTextOutputArea().append(String.format("Neighbour ids:", closestNode.getNeighbours()));
+		
+		for (Node neighbour : closestNode.getNeighbours()) {
+			getTextOutputArea().append(String.format(" %d,", neighbour.getId()));
+		}
+		
+		getTextOutputArea().append("\n");
 		
 		// Highlight it on the page
 		highlightedNode = closestNode;
