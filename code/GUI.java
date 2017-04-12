@@ -83,6 +83,8 @@ public abstract class GUI {
 	protected abstract void onMove(Move m);
 	
 	protected abstract void onTripClick();
+	
+	protected abstract void onPointsClick();
 
 	/**
 	 * Is called when the user has successfully selected a directory to load the
@@ -305,6 +307,14 @@ public abstract class GUI {
 				redraw();
 			}	
 		});
+		
+		JButton points = new JButton("Art. Points");
+		points.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				onPointsClick();
+				redraw();
+			}	
+		});
 
 		// next, make the search box at the top-right. we manually fix
 		// it's size, and add an action listener to call your code when
@@ -377,13 +387,14 @@ public abstract class GUI {
 		controls.setBorder(edge);
 
 		JPanel loadquit = new JPanel();
-		loadquit.setLayout(new GridLayout(3, 1));
+		loadquit.setLayout(new GridLayout(4, 1));
 		// manually set a fixed size for the panel containing the load and quit
 		// buttons (doesn't change with window resize).
 		loadquit.setMaximumSize(new Dimension(50, 150));
 		loadquit.add(load);
 		loadquit.add(quit);
 		loadquit.add(trip);
+		loadquit.add(points);
 		controls.add(loadquit);
 		// rigid areas are invisible components that can be used to space
 		// components out.

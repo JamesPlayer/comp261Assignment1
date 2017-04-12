@@ -334,4 +334,9 @@ public class RoadGraph {
 		AStarSearch aStarSearch = new AStarSearch();
 		return aStarSearch.getPath(start, end);
 	}
+	
+	public Set<Node> findArtPoints() {
+		ArtPointSearch artPointSearch = new ArtPointSearch(new HashSet<Node>(nodes.values()));
+		return artPointSearch.findArtPoints();
+	}
 }

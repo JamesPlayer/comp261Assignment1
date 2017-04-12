@@ -17,6 +17,8 @@ public class Node {
 	private static final Color SQUARE_COLOR = Color.BLUE;
 	
 	private static final Color HIGHLIGHT_COLOR = Color.GREEN;
+	
+	private static final Color ARTPOINT_COLOR = Color.MAGENTA;
 
 	private int id;
 	
@@ -29,6 +31,10 @@ public class Node {
 	private Set<Segment> inSegs;
 	
 	private Set<Node> neighbours;
+	
+	public int artPointCount = Integer.MAX_VALUE;
+	
+	public int artPointReachBack = Integer.MAX_VALUE;
 
 	/**
 	 * @return the id
@@ -159,6 +165,13 @@ public class Node {
 	
 	public void highlight(Graphics g, Location origin, double scale) {
 		g.setColor(HIGHLIGHT_COLOR);
+		Location location = Location.newFromLatLon(lat, lon);
+		Point point = location.asPoint(origin, scale);
+		g.fillRect(point.x-(HIGHLIGHT_SIZE/2), point.y-(HIGHLIGHT_SIZE/2), HIGHLIGHT_SIZE, HIGHLIGHT_SIZE);
+	}
+	
+	public void highlightArtPoint(Graphics g, Location origin, double scale) {
+		g.setColor(ARTPOINT_COLOR);
 		Location location = Location.newFromLatLon(lat, lon);
 		Point point = location.asPoint(origin, scale);
 		g.fillRect(point.x-(HIGHLIGHT_SIZE/2), point.y-(HIGHLIGHT_SIZE/2), HIGHLIGHT_SIZE, HIGHLIGHT_SIZE);

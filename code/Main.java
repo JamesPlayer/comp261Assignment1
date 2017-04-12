@@ -46,6 +46,8 @@ public class Main extends GUI {
 	
 	protected List<Segment> tripSegments;
 	
+	protected Set<Node> artPoints;
+	
 
 	/**
 	 * Constructor
@@ -56,6 +58,7 @@ public class Main extends GUI {
 		highlightedSegments = new HashSet<Segment>();
 		tripState = TRIP_STATE_NONE;
 		tripSegments = new ArrayList<Segment>();
+		artPoints = new HashSet<Node>();
 	}
 
 	@Override
@@ -90,6 +93,11 @@ public class Main extends GUI {
 		for (Segment segment : tripSegments) {
 			getTextOutputArea().append(String.format("%s: %.2f kms\n", segment.getRoad().getName(), segment.getLength()));
 			segment.highlight(g, origin, scale);
+		}
+		
+		// Draw articulation points;
+		for (Node node : artPoints) {
+			node.highlightArtPoint(g, origin, scale);
 		}
 	}
 
@@ -271,7 +279,12 @@ public class Main extends GUI {
 	protected void onTripClick() {
 		tripState = TRIP_STATE_SELECT_ORIGIN;
 		getTextOutputArea().append("Please select origin\n");
-		
+	}
+	
+	@Override
+	protected void onPointsClick() {
+		artPoints = roadGraph.findArtPoints();
+		getTextOutputArea().append("Articulation points highlighted in purple\n");
 	}
 	
 	/**
