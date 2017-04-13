@@ -1,11 +1,15 @@
+import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 public class ArtPointSearch {
 	
 	protected Set<Node> nodes;
 	
 	protected Set<Node> artPoints = new HashSet<Node>();
+	
+	protected Stack<IterArtPointNode> iterArtPointNodes = new Stack<IterArtPointNode>();
 	
 	
 	
@@ -21,6 +25,7 @@ public class ArtPointSearch {
 		for (Node node : nodes) {
 			node.artPointCount = Integer.MAX_VALUE;
 			node.artPointReachBack = Integer.MAX_VALUE;
+			node.artPointChildren = new ArrayDeque<Node>();
 		}
 	}
 
@@ -41,6 +46,7 @@ public class ArtPointSearch {
 		for (Node neighbour : start.getNeighbours()) {
 			if (neighbour.artPointCount == Integer.MAX_VALUE) {
 				recArtPoints(neighbour, 1, start);
+//				iterArtPoints(neighbour, 1, start);
 				numSubTrees++;
 			}
 		}
@@ -51,6 +57,40 @@ public class ArtPointSearch {
 		
 		return artPoints;
 		
+	}
+	
+	public void iterArtPoints(Node firstNode, int count, Node root) {
+		iterArtPointNodes.push(new IterArtPointNode(firstNode, count, root));
+		while (!iterArtPointNodes.isEmpty()) {
+			IterArtPointNode iterArtPointNode = iterArtPointNodes.peek();
+			
+			if (iterArtPointNode.node.artPointCount == Integer.MAX_VALUE) {
+				iterArtPointNode.node.artPointCount = count;
+				iterArtPointNode.node.artPointReachBack = count;
+				iterArtPointNode.node.artPointChildren = new ArrayDeque<Node>();
+				
+				for (Node neighbour : iterArtPointNode.node.getNeighbours()) {
+					if (neighbour != iterArtPointNode.root) {
+						iterArtPointNode.node.artPointChildren.add(neighbour);
+					}
+				}
+			} else if (!iterArtPointNode.node.artPointChildren.isEmpty()) {
+				Node child = iterArtPointNode.node.artPointChildren.poll();
+				if (child.artPointReachBack < Integer.MAX_VALUE) {
+					iterArtPointNode.node.artPointReachBack = Math.min(iterArtPointNode.node.artPointReachBack, child.artPointCount);
+				} else {
+					iterArtPointNodes.push(new IterArtPointNode(child, count+1, iterArtPointNode.node));
+				}
+			} else {
+				if (iterArtPointNode.node != firstNode) {
+					if (iterArtPointNode.node.artPointReachBack >= iterArtPointNode.root.artPointCount) {
+						artPoints.add(iterArtPointNode.root);
+					}
+					iterArtPointNode.root.artPointReachBack = Math.min(iterArtPointNode.root.artPointReachBack, iterArtPointNode.node.artPointReachBack);
+				}
+				iterArtPointNodes.pop();
+			}
+		}
 	}
 	
 	public int recArtPoints(Node node, int count, Node fromNode) {

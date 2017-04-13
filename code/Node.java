@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -35,6 +37,10 @@ public class Node {
 	public int artPointCount = Integer.MAX_VALUE;
 	
 	public int artPointReachBack = Integer.MAX_VALUE;
+	
+	public Queue<Node> artPointChildren = new ArrayDeque<Node>();
+	
+	
 
 	/**
 	 * @return the id
