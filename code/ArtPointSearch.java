@@ -45,8 +45,8 @@ public class ArtPointSearch {
 		
 		for (Node neighbour : start.getNeighbours()) {
 			if (neighbour.artPointCount == Integer.MAX_VALUE) {
-				recArtPoints(neighbour, 1, start);
-//				iterArtPoints(neighbour, 1, start);
+//				recArtPoints(neighbour, 1, start);
+				iterArtPoints(neighbour, 1, start);
 				numSubTrees++;
 			}
 		}
@@ -79,7 +79,7 @@ public class ArtPointSearch {
 				if (child.artPointReachBack < Integer.MAX_VALUE) {
 					iterArtPointNode.node.artPointReachBack = Math.min(iterArtPointNode.node.artPointReachBack, child.artPointCount);
 				} else {
-					iterArtPointNodes.push(new IterArtPointNode(child, count+1, iterArtPointNode.node));
+					iterArtPointNodes.push(new IterArtPointNode(child, count++, iterArtPointNode.node));
 				}
 			} else {
 				if (iterArtPointNode.node != firstNode) {

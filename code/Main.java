@@ -123,6 +123,8 @@ public class Main extends GUI {
 		
 		// Show some info about the intersection
 		getTextOutputArea().append(String.format("Node id: %d\n", closestNode.getId()));
+		getTextOutputArea().append(String.format("artPointCount: %d\n", closestNode.artPointCount));
+		getTextOutputArea().append(String.format("artPointReachBack: %d\n", closestNode.artPointReachBack));
 		getTextOutputArea().append(String.format("Coords: %.5f, %.5f\n", closestNode.getLat(), closestNode.getLon()));
 		getTextOutputArea().append(String.format("Neighbour ids:", closestNode.getNeighbours()));
 		
@@ -136,6 +138,7 @@ public class Main extends GUI {
 		highlightedNode = closestNode;
 		
 		if (tripState == TRIP_STATE_NONE) {
+			tripSegments.clear();
 			printNodesFromRoad(closestNode);
 		} else if (tripState == TRIP_STATE_SELECT_ORIGIN) {
 			tripOrigin = closestNode;
