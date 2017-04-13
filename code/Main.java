@@ -90,9 +90,24 @@ public class Main extends GUI {
 		}
 		
 		// Draw trip segments
+		String currRoadName = "";
+		double length = 0;
+		int i = 0;
 		for (Segment segment : tripSegments) {
-			getTextOutputArea().append(String.format("%s: %.2f kms\n", segment.getRoad().getName(), segment.getLength()));
-			segment.highlight(g, origin, scale);
+			
+			// If this is last segment or next segment is a different road then
+			// Print segment and tally of segment lengths from same road
+			boolean lastSegment = (segment == tripSegments.get(tripSegments.size() - 1));
+			
+			if (lastSegment || !tripSegments.get(i+1).getRoad().getName().equals(segment.getRoad().getName())) {
+				getTextOutputArea().append(String.format("%s: %.2f kms\n", segment.getRoad().getName(), length + segment.getLength()));
+				length = 0;
+			} else {
+				length += segment.getLength();
+			}
+			
+			segment.highlight(g, origin, scale);			
+			i++;
 		}
 		
 		// Draw articulation points;
@@ -281,6 +296,9 @@ public class Main extends GUI {
 	@Override
 	protected void onTripClick() {
 		tripState = TRIP_STATE_SELECT_ORIGIN;
+		tripSegments.clear();
+		tripOrigin = null;
+		tripDest = null;
 		getTextOutputArea().append("Please select origin\n");
 	}
 	
