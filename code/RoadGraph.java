@@ -27,6 +27,8 @@ public class RoadGraph {
 	private RoadTrie roadTrie;
 	
 	private Set<Polygon> polygons;
+	
+	private Set<Restriction> restrictions;
 
 	/**
 	 * @return the nodes
@@ -99,6 +101,20 @@ public class RoadGraph {
 	}
 
 	/**
+	 * @return the restrictions
+	 */
+	public Set<Restriction> getRestrictions() {
+		return restrictions;
+	}
+
+	/**
+	 * @param restrictions the restrictions to set
+	 */
+	public void setRestrictions(Set<Restriction> restrictions) {
+		this.restrictions = restrictions;
+	}
+
+	/**
 	 * Constructor
 	 */
 	public RoadGraph() {
@@ -107,6 +123,7 @@ public class RoadGraph {
 		roads = new HashMap<Integer, Road>();
 		roadTrie = new RoadTrie();
 		polygons = new HashSet<Polygon>();
+		restrictions = new HashSet<Restriction>();
 	}
 
 	/**
@@ -118,19 +135,44 @@ public class RoadGraph {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public LoadGraphResult load(File nodesFile, File roadsFile, File segmentsFile, File polygonsFile) throws FileNotFoundException, IOException {
+	public LoadGraphResult load(File nodesFile, File roadsFile, File segmentsFile, File polygonsFile, File restrictionsFile) throws FileNotFoundException, IOException {
 		int numRoadsAdded = loadRoads(roadsFile);
 		LoadNodesResult loadNodesResult = loadNodes(nodesFile);
 		int numSegmentsAdded = loadSegments(segmentsFile);
 		String result = String.format("Added %d roads, %d intersections and %d road segments", numRoadsAdded, loadNodesResult.count, numSegmentsAdded);
-		
 		
 		// Add polygon data
 		if (polygonsFile != null) {			
 			loadPolygons(polygonsFile);
 		}
 		
+		// Add restriction data
+		if (restrictionsFile != null) {
+			loadRestrictions(restrictionsFile);
+		}
+		
 		return new LoadGraphResult(loadNodesResult.northernMostLat, loadNodesResult.westernMostLon, loadNodesResult.southernMostLat, loadNodesResult.easternMostLon, loadNodesResult.count, numRoadsAdded, numSegmentsAdded, result);
+	}
+	
+	private void loadRestrictions(File restrictionsFile) throws FileNotFoundException, IOException {
+		BufferedReader data = new BufferedReader(new FileReader(restrictionsFile));
+		int count = 0;
+		
+		// Skip first line
+		String line = data.readLine();
+		
+		while ((line = data.readLine()) != null) {
+			String[] values 	= line.split("\t");
+			
+			Restriction restriction = new Restriction(
+					Integer.parseInt(values[0]), 
+					Integer.parseInt(values[1]), 
+					Integer.parseInt(values[2]), 
+					Integer.parseInt(values[3]), 
+					Integer.parseInt(values[4]));
+			
+			restrictions.add(restriction);
+		}
 	}
 
 	/**
@@ -330,8 +372,8 @@ public class RoadGraph {
 		
 	}
 	
-	public AStarFringeNode AStarSearch(Node start, Node end) {
-		AStarSearch aStarSearch = new AStarSearch();
+	public AStarFringeNode AStarSearch(Node start, Node end, Set<Restriction> restrictions) {
+		AStarSearch aStarSearch = new AStarSearch(restrictions);
 		return aStarSearch.getPath(start, end);
 	}
 	

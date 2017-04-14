@@ -168,7 +168,7 @@ public class Main extends GUI {
 	
 	protected void showShortestPath() {
 		tripSegments.clear();
-		AStarFringeNode node = roadGraph.AStarSearch(tripOrigin, tripDest);
+		AStarFringeNode node = roadGraph.AStarSearch(tripOrigin, tripDest, roadGraph.getRestrictions());
 		
 		while (node.from != null) {
 			tripSegments.add(node.segment);
@@ -340,11 +340,11 @@ public class Main extends GUI {
 	}
 
 	@Override
-	protected void onLoad(File nodes, File roads, File segments, File polygons) {
+	protected void onLoad(File nodes, File roads, File segments, File polygons, File restrictions) {
 		try {
 			
 			// Load files data into graph
-			LoadGraphResult loadGraphResult = roadGraph.load(nodes, roads, segments, polygons);
+			LoadGraphResult loadGraphResult = roadGraph.load(nodes, roads, segments, polygons, restrictions);
 			getTextOutputArea().append(loadGraphResult.result + "\n");
 			
 			// Get topLeft and bottomRight points to get initial origin and scale

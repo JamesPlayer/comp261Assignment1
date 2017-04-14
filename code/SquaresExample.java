@@ -84,7 +84,7 @@ public class SquaresExample extends GUI {
 	}
 
 	@Override
-	protected void onLoad(File nodes, File roads, File segments, File polygons) {
+	protected void onLoad(File nodes, File roads, File segments, File polygons, File restrictions) {
 		getTextOutputArea().setText("example doesn't load any files.");
 	}
 

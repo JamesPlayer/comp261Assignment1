@@ -11,9 +11,12 @@ public class AStarSearch {
 		
 	Set<Node> visited;
 	
-	public AStarSearch() {
+	Set<Restriction> restrictions;
+	
+	public AStarSearch(Set<Restriction> restrictions) {
 		fringe = new PriorityQueue<AStarFringeNode>(10, new AStarFringeComparator());
 		visited = new HashSet<Node>();
+		this.restrictions = restrictions;
 	}
 
 	protected class AStarFringeComparator implements Comparator<AStarFringeNode>
@@ -58,6 +61,17 @@ public class AStarSearch {
 			
 			for (Segment segment : fringeNode.segment.getEndNode().getOutSegs()) {
 				Node neighbour = segment.getEndNode();
+				
+				// Check for restriction
+				if (!(fringeNode.segment.getStartNode() == null) && restrictions.contains(new Restriction(
+						fringeNode.segment.getStartNode().getId(),
+						fringeNode.segment.getRoad().getId(),
+						fringeNode.segment.getEndNode().getId(),
+						segment.getRoad().getId(),
+						neighbour.getId()))) {
+					continue;
+				}
+				
 				double costToNeighbour = fringeNode.costFromStart + segment.getLength();
 				double estToGoal = costToNeighbour + heuristic(neighbour, goal);
 				fringe.add(new AStarFringeNode(segment, fringeNode, costToNeighbour, estToGoal));
