@@ -39,3 +39,18 @@ while fringe is not empty
 		costToNeighbour = fringeNode.costFromStart + cost(segment)
 		estToGoal = costToNeighbour + heuristic(neighbour, goal)
 		fringe.add(segment, fringeNode, costToNeighbour, estToGoal)
+		
+Describe your path cost and heuristic estimate
+------------------------------------------------
+
+If user has selected time based search:
+- path cost is length / (speed limit * road class weighting).
+- heuristic is Euclidean distance from node to goal / (max speed limit * max road class weighting)
+
+If user has selected distance based search:
+- path cost is length
+- heuristic is Euclidean distance from node to goal
+
+Give a detailed pseudocode algorithm for the articulation points.
+-----------------------------------------------------------------
+

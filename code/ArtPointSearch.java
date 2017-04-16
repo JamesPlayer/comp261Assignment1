@@ -21,7 +21,7 @@ public class ArtPointSearch {
 	public ArtPointSearch(Set<Node> nodes) {
 		this.nodes = nodes;
 		
-		// Rest all counts and reachbacks to infinity
+		// Reset all counts and reachbacks to infinity
 		for (Node node : nodes) {
 			node.artPointCount = Integer.MAX_VALUE;
 			node.artPointReachBack = Integer.MAX_VALUE;
