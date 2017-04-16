@@ -168,7 +168,7 @@ public class Main extends GUI {
 	
 	protected void showShortestPath() {
 		tripSegments.clear();
-		AStarFringeNode node = roadGraph.AStarSearch(tripOrigin, tripDest, roadGraph.getRestrictions());
+		AStarFringeNode node = roadGraph.AStarSearch(tripOrigin, tripDest, roadGraph.getRestrictions(), true);
 		
 		while (node.from != null) {
 			tripSegments.add(node.segment);

@@ -13,15 +13,18 @@ public class AStarSearch {
 	
 	Set<Restriction> restrictions;
 	
-	public AStarSearch(Set<Restriction> restrictions) {
+	boolean isTimeBased;
+	
+	public AStarSearch(Set<Restriction> restrictions, boolean isTimeBased) {
 		fringe = new PriorityQueue<AStarFringeNode>(10, new AStarFringeComparator());
 		visited = new HashSet<Node>();
 		this.restrictions = restrictions;
+		this.isTimeBased = isTimeBased;
 	}
 
 	protected class AStarFringeComparator implements Comparator<AStarFringeNode>
-	{
-	    @Override
+	{	
+		@Override
 	    public int compare(AStarFringeNode x, AStarFringeNode y)
 	    {
 	    	if (x.estToGoal < y.estToGoal) {
@@ -72,7 +75,7 @@ public class AStarSearch {
 					continue;
 				}
 				
-				double costToNeighbour = fringeNode.costFromStart + segment.getLength();
+				double costToNeighbour = fringeNode.costFromStart + costCalculator(segment.getLength(), segment.getRoad());
 				double estToGoal = costToNeighbour + heuristic(neighbour, goal);
 				fringe.add(new AStarFringeNode(segment, fringeNode, costToNeighbour, estToGoal));
 			}
@@ -85,7 +88,25 @@ public class AStarSearch {
 	public double heuristic(Node start, Node goal) {
 		Location startLoc = Location.newFromLatLon(start.getLat(), start.getLon());
 		Location goalLoc = Location.newFromLatLon(goal.getLat(), goal.getLon());
-		return startLoc.distance(goalLoc);
+		return heuristicCalculator(startLoc.distance(goalLoc));
 	}
+	
+	private double heuristicCalculator(double distance) {	
+    	if (!isTimeBased) {
+    		return distance;
+    	} else {
+    		// Distance divided by fastest road speed and road class
+    		return distance / (120 * 140);
+    	}
+    }
+	
+	private double costCalculator(double distance, Road road) {
+		if (!isTimeBased) {
+			return distance;
+		} else {
+			return distance / (road.getSpeedLimit() * road.getRoadClass());
+		}
+	}
+	
 	
 }

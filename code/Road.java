@@ -16,6 +16,8 @@ public class Road {
 	private boolean isOneWay;
 	
 	private int speedLimit;
+	
+	private int roadClass;
 
 	/**
 	 * @return the id
@@ -95,6 +97,20 @@ public class Road {
 		segments.add(segment);
 	}
 
+	/**
+	 * @return the roadClass
+	 */
+	public int getRoadClass() {
+		return roadClass;
+	}
+
+	/**
+	 * @param roadClass the roadClass to set
+	 */
+	public void setRoadClass(int roadClass) {
+		this.roadClass = roadClass;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -110,12 +126,13 @@ public class Road {
 	 * @param isOneWay
 	 * @param speedLimit
 	 */
-	public Road(int id, String name, Set<Segment> segments, boolean isOneWay, int speedLimit) {
+	public Road(int id, String name, Set<Segment> segments, boolean isOneWay, int speedLimit, int roadClass) {
 		this.id = id;
 		this.name = name;
 		this.segments = segments;
 		this.isOneWay = isOneWay;
 		this.speedLimit = speedLimit;
+		this.roadClass = roadClass;
 	}
 
 		

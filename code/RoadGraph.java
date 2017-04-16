@@ -296,15 +296,33 @@ public class RoadGraph {
 		// Skip first line
 		String line = data.readLine();
 		
+		Map<Integer, Integer> speedLimitWeightings = new HashMap<Integer, Integer>();
+		speedLimitWeightings.put(0, 5);
+		speedLimitWeightings.put(1, 20);
+		speedLimitWeightings.put(2, 40);
+		speedLimitWeightings.put(3, 60);
+		speedLimitWeightings.put(4, 80);
+		speedLimitWeightings.put(5, 100);
+		speedLimitWeightings.put(6, 110);
+		speedLimitWeightings.put(7, 120);
+		
+		Map<Integer, Integer> roadClassWeightings = new HashMap<Integer, Integer>();
+		roadClassWeightings.put(0, 100);
+		roadClassWeightings.put(1, 110);
+		roadClassWeightings.put(2, 120);
+		roadClassWeightings.put(3, 130);
+		roadClassWeightings.put(4, 140);
+		
 		while ((line = data.readLine()) != null) {
 			String[] values 	= line.split("\t");
 			int id 				= Integer.parseInt(values[0]);
 			String name 		= values[2];
 			boolean isOneWay 	= !values[4].equals("0");
 			int speedLimit 		= Integer.parseInt(values[5]);
+			int roadClass       = Integer.parseInt(values[6]);
 			
 			// Create road
-			Road road = new Road(id, name, new HashSet<Segment>(), isOneWay, speedLimit);
+			Road road = new Road(id, name, new HashSet<Segment>(), isOneWay, speedLimitWeightings.get(speedLimit), roadClassWeightings.get(roadClass));
 			
 			// Add to road map
 			roads.put(id, road);
@@ -372,8 +390,8 @@ public class RoadGraph {
 		
 	}
 	
-	public AStarFringeNode AStarSearch(Node start, Node end, Set<Restriction> restrictions) {
-		AStarSearch aStarSearch = new AStarSearch(restrictions);
+	public AStarFringeNode AStarSearch(Node start, Node end, Set<Restriction> restrictions, boolean isTimeBased) {
+		AStarSearch aStarSearch = new AStarSearch(restrictions, isTimeBased);
 		return aStarSearch.getPath(start, end);
 	}
 	
