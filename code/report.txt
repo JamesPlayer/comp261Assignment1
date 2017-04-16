@@ -1,0 +1,41 @@
+COMP261 Assignment 2
+James Player 301001129
+
+Describe what your code does and doesn’t do (eg, which stages and extensions
+above did you do):
+------------------------------------------------------------------------------
+
+I did all parts of this assignment except for incorporating traffic light information into path finding algorithm. Therefore my program:
+
+- Allows the user to plan a trip either prioritising distance or time.
+- Displays best route on graph, and prints segments and distance in output (no duplicates)
+- Limits based on restriction data e.g. no right hand turn.
+- Limits based on one-way data
+- Displays articulation points by clicking on "Show Art. Points"
+
+Give a detailed pseudocode algorithm for the main search.
+----------------------------------------------------------
+
+initialise:
+fringe = new priority queue (segment, fromNode, costFromStart, estToGoal)
+visited = new set
+
+fringe.add(segment with end node but no start node, null, 0, heuristic(start, goal))
+
+while fringe is not empty
+	fringeNode <- poll fringe
+	
+	ignore if visited contains fringeNode segment's endNode
+	
+	add fringeNode segment's endNode to visited
+	
+	if fringeNode segment's endNode = goal
+		return fringeNode
+		
+	foreach segment in fringeNode segment's endNode's outSegments
+		neighbour <- segment.endNode
+		ignore if a restriction exists between fringeNode segment and this segment
+		
+		costToNeighbour = fringeNode.costFromStart + cost(segment)
+		estToGoal = costToNeighbour + heuristic(neighbour, goal)
+		fringe.add(segment, fringeNode, costToNeighbour, estToGoal)
