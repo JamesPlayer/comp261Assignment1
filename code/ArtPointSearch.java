@@ -38,23 +38,29 @@ public class ArtPointSearch {
 		if (nodes.isEmpty()) return artPoints;
 		
 		for (Node node : nodes) {
-			start = node; break;
-		}
-		
-		start.artPointCount = 0;
-		
-		for (Node neighbour : start.getNeighbours()) {
-			if (neighbour.artPointCount == Integer.MAX_VALUE) {
-//				recArtPoints(neighbour, 1, start);
-				iterArtPoints(neighbour, 1, start);
-				numSubTrees++;
+			
+			// Ignore if we've been here before
+			if (node.artPointCount < Integer.MAX_VALUE) {
+				continue;
+			}
+			
+			start = node;
+			numSubTrees = 0;
+			
+			start.artPointCount = 0;
+			
+			for (Node neighbour : start.getNeighbours()) {
+				if (neighbour.artPointCount == Integer.MAX_VALUE) {
+					iterArtPoints(neighbour, 1, start);
+					numSubTrees++;
+				}
+			}
+			
+			if (numSubTrees > 1) {
+				artPoints.add(start);
 			}
 		}
-		
-		if (numSubTrees > 1) {
-			artPoints.add(start);
-		}	
-		
+				
 		return artPoints;
 		
 	}
