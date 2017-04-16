@@ -118,7 +118,7 @@ public class SquaresExample extends GUI {
 	}
 
 	@Override
-	protected void onTripClick() {
+	protected void onTripClick(boolean isTimeBased) {
 		// TODO Auto-generated method stub
 		
 	}

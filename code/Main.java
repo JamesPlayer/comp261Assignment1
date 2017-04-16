@@ -46,6 +46,8 @@ public class Main extends GUI {
 	
 	protected List<Segment> tripSegments;
 	
+	protected boolean tripIsTimeBased;
+	
 	protected Set<Node> artPoints;
 	
 
@@ -168,7 +170,7 @@ public class Main extends GUI {
 	
 	protected void showShortestPath() {
 		tripSegments.clear();
-		AStarFringeNode node = roadGraph.AStarSearch(tripOrigin, tripDest, roadGraph.getRestrictions(), true);
+		AStarFringeNode node = roadGraph.AStarSearch(tripOrigin, tripDest, roadGraph.getRestrictions(), tripIsTimeBased);
 		
 		while (node.from != null) {
 			tripSegments.add(node.segment);
@@ -294,11 +296,12 @@ public class Main extends GUI {
 	}
 	
 	@Override
-	protected void onTripClick() {
+	protected void onTripClick(boolean isTimeBased) {
 		tripState = TRIP_STATE_SELECT_ORIGIN;
 		tripSegments.clear();
 		tripOrigin = null;
 		tripDest = null;
+		tripIsTimeBased = isTimeBased;
 		getTextOutputArea().append("Please select origin\n");
 	}
 	

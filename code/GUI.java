@@ -82,7 +82,7 @@ public abstract class GUI {
 	 */
 	protected abstract void onMove(Move m);
 	
-	protected abstract void onTripClick();
+	protected abstract void onTripClick(boolean isTimeBased);
 	
 	protected abstract void onPointsClick();
 
@@ -302,10 +302,18 @@ public abstract class GUI {
 			}
 		});
 		
-		JButton trip = new JButton("Trip");
+		JButton trip = new JButton("Trip (least distance)");
 		trip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				onTripClick();
+				onTripClick(false);
+				redraw();
+			}	
+		});
+		
+		JButton tripTime = new JButton("Trip (least time)");
+		tripTime.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				onTripClick(true);
 				redraw();
 			}	
 		});
@@ -389,13 +397,14 @@ public abstract class GUI {
 		controls.setBorder(edge);
 
 		JPanel loadquit = new JPanel();
-		loadquit.setLayout(new GridLayout(4, 1));
+		loadquit.setLayout(new GridLayout(5, 1));
 		// manually set a fixed size for the panel containing the load and quit
 		// buttons (doesn't change with window resize).
 		loadquit.setMaximumSize(new Dimension(50, 150));
 		loadquit.add(load);
 		loadquit.add(quit);
 		loadquit.add(trip);
+		loadquit.add(tripTime);
 		loadquit.add(points);
 		controls.add(loadquit);
 		// rigid areas are invisible components that can be used to space
