@@ -94,6 +94,7 @@ public class Main extends GUI {
 		// Draw trip segments
 		String currRoadName = "";
 		double length = 0;
+		double totalLength = 0;
 		int i = 0;
 		for (Segment segment : tripSegments) {
 			
@@ -106,10 +107,15 @@ public class Main extends GUI {
 				length = 0;
 			} else {
 				length += segment.getLength();
+				totalLength += segment.getLength();
 			}
 			
 			segment.highlight(g, origin, scale);			
 			i++;
+		}
+		
+		if (totalLength > 0) {			
+			getTextOutputArea().append(String.format("Total length: %.2f kms\n", totalLength));
 		}
 		
 		// Draw articulation points;
