@@ -54,3 +54,61 @@ If user has selected distance based search:
 Give a detailed pseudocode algorithm for the articulation points.
 -----------------------------------------------------------------
 
+initialise:
+for all nodes
+	set node.count to infinity
+	
+numSubTrees <- 0
+start <- any one node from nodes
+
+start.count = 0
+
+foreach neighbour in start.neighbours
+	if neighbour.count = infinity
+		iterArtPoints(neighbour, 1, start)
+		numSubTrees++
+		
+if numSubTrees > 1
+	artPoints.add(start)
+	
+return artPoints
+
+iterArtPoints(firstNode, count, root)
+	stack = new stack
+	stack.push(firstNode, count, root)
+	
+	while stack is not empty
+		stack.peek(node, count, fromNode)
+		
+		if node.count = infinity
+			node.count = count
+			node.reachback = count
+			node.children = new queue
+			
+			foreach neighbour in node.neighbours
+				if neighbour != fromNode
+					node.children.add(neighbour)
+					
+		else if node.children is not empty
+			child <- node.children.dequeue
+			if child.count < infinity
+				node.reachback <- min(node.reachback, child.count)
+			else
+				stack.push(child, count++, node)
+		
+		else
+			if node != firstNode
+				if node.reachback >= fromNode.count
+					artPoints.add(fromNode)
+				fromNode.reachback = min(fromNode.reachback, node.reachback)
+			stack.pop(node, count, fromNode)
+			
+outline how you tested that your program worked.
+------------------------------------------------
+
+For shortest path: chose two nodes fairly close to each other, used eye to see that shortest path was highlighted
+For one-way limitations: chose a node on a one way street as start point, chose destination as another node up stream on same street, saw that highlighted path went off one way street, up parallel street and then back to destination
+For restrictions: Found path involved in first restriction, tried route from start to end with restrictions turned off, route was original, tried same route with restrictions turned on, different route was highlighted
+For time based route finding: Tried distance based route between two nodes over a large distance, noted highlighted path, tried same thing using time based route finding, route was different, went onto highway and had a larger distance
+For articulation points: Sampled a large number of highlighted articulation points and used eye to see that they were correct. 	
+
